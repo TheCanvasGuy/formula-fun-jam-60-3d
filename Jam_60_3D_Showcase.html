@@ -554,13 +554,19 @@
         </div>
       </div>
       <div class="header-actions">
-        <a rel="ar" href="Jam_60_Blackout_Exploded.usdz" class="btn-pill primary">
+        <a rel="ar" href="Jam_60_Blackout_Assembled.usdz?v=20261028c" class="btn-pill primary">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          Launch Blackout AR (.USDZ)
+          Blackout Constructed (.USDZ)
         </a>
-        <a rel="ar" href="Jam_60_Yellow_Exploded.usdz" class="btn-pill dark">
+        <a rel="ar" href="Jam_60_Yellow_Assembled.usdz?v=20261028c" class="btn-pill dark">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          Launch Mellow Yellow AR (.USDZ)
+          Yellow Constructed (.USDZ)
+        </a>
+        <a rel="ar" href="Jam_60_Blackout_Exploded.usdz?v=20261028c" class="btn-pill">
+          Blackout Exploded (.USDZ)
+        </a>
+        <a rel="ar" href="Jam_60_Yellow_Exploded.usdz?v=20261028c" class="btn-pill">
+          Yellow Exploded (.USDZ)
         </a>
       </div>
     </div>
@@ -607,8 +613,8 @@
           </div>
           <div class="compare-media" style="background-color: #FFFFFF; min-height: 260px;">
             <video
-              src="renders/Jam_60_Blackout_Exploded_Animation.mp4"
-              poster="renders/jam_blackout_twinnie_exploded.png"
+              src="renders/Jam_60_Blackout_Exploded_Animation.mp4?v=20261028c"
+              poster="renders/jam_blackout_twinnie_exploded.png?v=20261028c"
               playsinline
               webkit-playsinline
               muted
@@ -621,7 +627,7 @@
           </div>
           <div class="compare-foot">
             <span>Deck Pad · Dual Wood Stringers · Marko EPS Cavity · 3 Futures Fin Boxes</span>
-            <a href="renders/Jam_60_Blackout_Exploded_Animation.mp4" download class="btn-pill primary">Download MP4</a>
+            <a href="renders/Jam_60_Blackout_Exploded_Animation.mp4?v=20261028c" download class="btn-pill primary">Download MP4</a>
           </div>
         </div>
 
@@ -632,8 +638,8 @@
           </div>
           <div class="compare-media" style="background-color: #FFFFFF; min-height: 260px;">
             <video
-              src="renders/Jam_60_Yellow_Exploded_Animation.mp4"
-              poster="renders/jam_yellow_twinnie_exploded.png"
+              src="renders/Jam_60_Yellow_Exploded_Animation.mp4?v=20261028c"
+              poster="renders/jam_yellow_twinnie_exploded.png?v=20261028c"
               playsinline
               webkit-playsinline
               muted
@@ -646,7 +652,7 @@
           </div>
           <div class="compare-foot">
             <span>Mellow Yellow (#F5B800) Deck Pad · Wood Stringers · Marko EPS Core</span>
-            <a href="renders/Jam_60_Yellow_Exploded_Animation.mp4" download class="btn-pill primary">Download MP4</a>
+            <a href="renders/Jam_60_Yellow_Exploded_Animation.mp4?v=20261028c" download class="btn-pill primary">Download MP4</a>
           </div>
         </div>
 
@@ -689,7 +695,7 @@
           <div class="control-group" role="group" aria-label="Assembly Mode Selector">
             <span class="group-label">State:</span>
             <button type="button" id="btnModeExploded" class="btn-pill active-tab" onclick="setAssemblyMode('exploded')">Exploded Loop</button>
-            <button type="button" id="btnModeAssembled" class="btn-pill" onclick="setAssemblyMode('assembled')">Static Assembled</button>
+            <button type="button" id="btnModeAssembled" class="btn-pill" onclick="setAssemblyMode('assembled')">Constructed (Assembled)</button>
           </div>
           <div class="control-group" role="group" aria-label="Camera Presets">
             <span class="group-label">Angle:</span>
@@ -701,8 +707,8 @@
 
         <model-viewer
           id="jamViewer"
-          src="Jam_60_Blackout_Exploded.glb"
-          ios-src="Jam_60_Blackout_Exploded.usdz"
+          src="Jam_60_Blackout_Exploded.glb?v=20261028c"
+          ios-src="Jam_60_Blackout_Exploded.usdz?v=20261028c"
           alt="Formula Fun 6'0 Jam 3D Surfboard Assembly"
           ar
           ar-modes="quick-look webxr scene-viewer"
@@ -735,55 +741,65 @@
         </div>
       </div>
 
-      <!-- Right Column: One-Tap iPhone AR Quick Look Cards & SolidWorks BOM -->
+      <!-- Right Column: One-Tap iPhone AR Quick Look Cards, Direct Model Downloads & SolidWorks BOM -->
       <div class="side-stack">
         <div class="panel-card">
-          <h2>iPhone Safari AR Quick Look (.USDZ)</h2>
-          <p class="sub">Tap any card below on iPhone or iPad to open native Apple AR Quick Look with embedded 4K PBR textures.</p>
+          <h2>iPhone Safari AR Quick Look &amp; 3D Model Downloads</h2>
+          <p class="sub">All models include embedded 4K Formula Fun branding and flush constructed geometry (zero exposed stringers when constructed).</p>
           <div class="ar-grid">
-            <a rel="ar" href="Jam_60_Blackout_Exploded.usdz" class="ar-launch-card">
-              <img src="renders/jam_blackout_twinnie_exploded.png" alt="Blackout Exploded USDZ">
+            <a rel="ar" href="Jam_60_Blackout_Assembled.usdz?v=20261028c" class="ar-launch-card">
+              <img src="renders/jam_blackout_deck_ortho.png?v=20261028c" alt="Blackout Constructed USDZ">
+              <div class="ar-card-meta">
+                <div class="ar-card-title">
+                  <span>Blackout · Constructed</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                </div>
+                <div class="ar-card-sub">USDZ · 19.6 MB · Flush Sealed</div>
+              </div>
+            </a>
+
+            <a rel="ar" href="Jam_60_Yellow_Assembled.usdz?v=20261028c" class="ar-launch-card">
+              <img src="renders/jam_yellow_deck_ortho.png?v=20261028c" alt="Mellow Yellow Constructed USDZ">
+              <div class="ar-card-meta">
+                <div class="ar-card-title">
+                  <span>Yellow · Constructed</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                </div>
+                <div class="ar-card-sub">USDZ · 22.8 MB · Flush Sealed</div>
+              </div>
+            </a>
+
+            <a rel="ar" href="Jam_60_Blackout_Exploded.usdz?v=20261028c" class="ar-launch-card">
+              <img src="renders/jam_blackout_twinnie_exploded.png?v=20261028c" alt="Blackout Exploded USDZ">
               <div class="ar-card-meta">
                 <div class="ar-card-title">
                   <span>Blackout · Exploded</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                 </div>
-                <div class="ar-card-sub">USDZ · 22.6 MB · 10s Loop</div>
+                <div class="ar-card-sub">USDZ · 21.3 MB · 10s Loop</div>
               </div>
             </a>
 
-            <a rel="ar" href="Jam_60_Yellow_Exploded.usdz" class="ar-launch-card">
-              <img src="renders/jam_yellow_twinnie_exploded.png" alt="Mellow Yellow Exploded USDZ">
+            <a rel="ar" href="Jam_60_Yellow_Exploded.usdz?v=20261028c" class="ar-launch-card">
+              <img src="renders/jam_yellow_twinnie_exploded.png?v=20261028c" alt="Mellow Yellow Exploded USDZ">
               <div class="ar-card-meta">
                 <div class="ar-card-title">
                   <span>Yellow · Exploded</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                 </div>
-                <div class="ar-card-sub">USDZ · 24.9 MB · 10s Loop</div>
+                <div class="ar-card-sub">USDZ · 25.0 MB · 10s Loop</div>
               </div>
             </a>
+          </div>
 
-            <a rel="ar" href="Jam_60_Blackout_Assembled.usdz" class="ar-launch-card">
-              <img src="renders/jam_blackout_deck_ortho.png" alt="Blackout Assembled USDZ">
-              <div class="ar-card-meta">
-                <div class="ar-card-title">
-                  <span>Blackout · Assembled</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-                </div>
-                <div class="ar-card-sub">USDZ · 22.6 MB · Static</div>
-              </div>
-            </a>
-
-            <a rel="ar" href="Jam_60_Yellow_Assembled.usdz" class="ar-launch-card">
-              <img src="renders/jam_yellow_deck_ortho.png" alt="Mellow Yellow Assembled USDZ">
-              <div class="ar-card-meta">
-                <div class="ar-card-title">
-                  <span>Yellow · Assembled</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-                </div>
-                <div class="ar-card-sub">USDZ · 24.9 MB · Static</div>
-              </div>
-            </a>
+          <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--ff-border); display: flex; flex-direction: column; gap: 8px;">
+            <div class="telemetry-label">Direct WebGL / CAD Downloads (.GLB Binary)</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <a href="Jam_60_Blackout_Assembled.glb?v=20261028c" download="Jam_60_Blackout_Assembled.glb" class="btn-pill primary">Blackout Constructed (.GLB)</a>
+              <a href="Jam_60_Yellow_Assembled.glb?v=20261028c" download="Jam_60_Yellow_Assembled.glb" class="btn-pill primary">Yellow Constructed (.GLB)</a>
+              <a href="Jam_60_Blackout_Exploded.glb?v=20261028c" download="Jam_60_Blackout_Exploded.glb" class="btn-pill">Blackout Exploded (.GLB)</a>
+              <a href="Jam_60_Yellow_Exploded.glb?v=20261028c" download="Jam_60_Yellow_Exploded.glb" class="btn-pill">Yellow Exploded (.GLB)</a>
+            </div>
           </div>
         </div>
 
@@ -870,11 +886,11 @@
             <span class="compare-tag">3D CAD Render</span>
           </div>
           <div class="compare-media">
-            <img src="renders/jam_blackout_twinnie_exploded.png" alt="6'0 Jam Blackout Twinnie Exploded Render">
+            <img src="renders/jam_blackout_twinnie_exploded.png?v=20261028c" alt="6'0 Jam Blackout Twinnie Exploded Render">
           </div>
           <div class="compare-foot">
             <span>Exact SolidWorks geometry draped to 6'0" Jam rocker contour</span>
-            <a href="renders/jam_blackout_twinnie_exploded.png" target="_blank" class="btn-pill">Open 2K PNG</a>
+            <a href="renders/jam_blackout_twinnie_exploded.png?v=20261028c" target="_blank" class="btn-pill">Open 2K PNG</a>
           </div>
         </div>
 
@@ -884,11 +900,11 @@
             <span class="compare-tag">3D CAD Render</span>
           </div>
           <div class="compare-media">
-            <img src="renders/jam_yellow_twinnie_exploded.png" alt="6'0 Jam Yellow Twinnie Exploded Render">
+            <img src="renders/jam_yellow_twinnie_exploded.png?v=20261028c" alt="6'0 Jam Yellow Twinnie Exploded Render">
           </div>
           <div class="compare-foot">
             <span>Mellow Yellow (#F5B800) EVA Deck Pad + Dual Wood Stringers + Core</span>
-            <a href="renders/jam_yellow_twinnie_exploded.png" target="_blank" class="btn-pill">Open 2K PNG</a>
+            <a href="renders/jam_yellow_twinnie_exploded.png?v=20261028c" target="_blank" class="btn-pill">Open 2K PNG</a>
           </div>
         </div>
 
@@ -899,11 +915,11 @@
             <span class="compare-tag">With Thruster Fins</span>
           </div>
           <div class="compare-media">
-            <img src="renders/jam_blackout_exploded_full_assembly.png" alt="Jam Blackout Full Exploded Assembly with Thruster Fins">
+            <img src="renders/jam_blackout_exploded_full_assembly.png?v=20261028c" alt="Jam Blackout Full Exploded Assembly with Thruster Fins">
           </div>
           <div class="compare-foot">
             <span>Includes 3 Futures Fin Boxes + 3 White Composite Thruster Fins</span>
-            <a href="renders/jam_blackout_exploded_full_assembly.png" target="_blank" class="btn-pill">Open 2K PNG</a>
+            <a href="renders/jam_blackout_exploded_full_assembly.png?v=20261028c" target="_blank" class="btn-pill">Open 2K PNG</a>
           </div>
         </div>
 
@@ -913,11 +929,11 @@
             <span class="compare-tag">With Thruster Fins</span>
           </div>
           <div class="compare-media">
-            <img src="renders/jam_yellow_exploded_full_assembly.png" alt="Jam Yellow Full Exploded Assembly with Thruster Fins">
+            <img src="renders/jam_yellow_exploded_full_assembly.png?v=20261028c" alt="Jam Yellow Full Exploded Assembly with Thruster Fins">
           </div>
           <div class="compare-foot">
             <span>Includes 3 Futures Fin Boxes + 3 White Composite Thruster Fins</span>
-            <a href="renders/jam_yellow_exploded_full_assembly.png" target="_blank" class="btn-pill">Open 2K PNG</a>
+            <a href="renders/jam_yellow_exploded_full_assembly.png?v=20261028c" target="_blank" class="btn-pill">Open 2K PNG</a>
           </div>
         </div>
 
@@ -943,11 +959,11 @@
           </div>
           <div class="compare-media" style="gap: 12px;">
             <img src="references/Jam_Black.png" alt="Official Jam Blackout Photo" style="max-width: 47%;">
-            <img src="renders/jam_blackout_deck_ortho.png" alt="3D Rendered Jam Blackout" style="max-width: 47%;">
+            <img src="renders/jam_blackout_deck_ortho.png?v=20261028c" alt="3D Rendered Jam Blackout" style="max-width: 47%;">
           </div>
           <div class="compare-foot">
             <span>Left: Jam_Black.png · Right: 3D Assembled GLB/USDZ Render</span>
-            <a href="renders/jam_blackout_deck_ortho.png" target="_blank" class="btn-pill">Open Render</a>
+            <a href="renders/jam_blackout_deck_ortho.png?v=20261028c" target="_blank" class="btn-pill">Open Render</a>
           </div>
         </div>
 
@@ -958,11 +974,11 @@
           </div>
           <div class="compare-media" style="gap: 12px;">
             <img src="references/Jam_Yellow.png" alt="Official Jam Yellow Photo" style="max-width: 47%;">
-            <img src="renders/jam_yellow_deck_ortho.png" alt="3D Rendered Jam Yellow" style="max-width: 47%;">
+            <img src="renders/jam_yellow_deck_ortho.png?v=20261028c" alt="3D Rendered Jam Yellow" style="max-width: 47%;">
           </div>
           <div class="compare-foot">
             <span>Left: Jam_Yellow.png · Right: 3D Assembled GLB/USDZ Render</span>
-            <a href="renders/jam_yellow_deck_ortho.png" target="_blank" class="btn-pill">Open Render</a>
+            <a href="renders/jam_yellow_deck_ortho.png?v=20261028c" target="_blank" class="btn-pill">Open Render</a>
           </div>
         </div>
 
@@ -973,11 +989,11 @@
           </div>
           <div class="compare-media" style="gap: 12px;">
             <img src="references/Jam_Bottom_Hull.png" alt="Official Jam Bottom Hull Photo" style="max-width: 47%;">
-            <img src="renders/jam_bottom_hull_thruster.png" alt="3D Rendered Jam Bottom Hull" style="max-width: 47%;">
+            <img src="renders/jam_bottom_hull_thruster.png?v=20261028c" alt="3D Rendered Jam Bottom Hull" style="max-width: 47%;">
           </div>
           <div class="compare-foot">
             <span>Left: PVW_2601_1400x · Right: 3D Assembled Hull Render</span>
-            <a href="renders/jam_bottom_hull_thruster.png" target="_blank" class="btn-pill">Open Render</a>
+            <a href="renders/jam_bottom_hull_thruster.png?v=20261028c" target="_blank" class="btn-pill">Open Render</a>
           </div>
         </div>
       </div>
@@ -993,12 +1009,13 @@
     let currentColorway = 'blackout';
     let currentMode = 'exploded';
     let isPlaying = true;
+    const CACHE_VER = 'v=20261028c';
 
     function updateModelSource() {
       const cap = currentColorway === 'blackout' ? 'Blackout' : 'Yellow';
       const stateCap = currentMode === 'exploded' ? 'Exploded' : 'Assembled';
-      viewer.src = `Jam_60_${cap}_${stateCap}.glb`;
-      viewer.iosSrc = `Jam_60_${cap}_${stateCap}.usdz`;
+      viewer.src = `Jam_60_${cap}_${stateCap}.glb?${CACHE_VER}`;
+      viewer.iosSrc = `Jam_60_${cap}_${stateCap}.usdz?${CACHE_VER}`;
 
       if (currentMode === 'exploded') {
         viewer.setAttribute('autoplay', '');
