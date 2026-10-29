@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    if (!window.location.search.includes('v=20261028e')) {
+      window.location.replace(window.location.pathname + '?v=20261028e' + window.location.hash);
+    }
+  </script>
+  <title>Formula Fun 6'0" Jam — Single-Stringer 3D CAD, Exploded Assembly &amp; iPhone AR Review</title>
+  <script type="module" src="model-viewer.min.js"></script>
+  <style>
+    /* Formula Fun Canonical Design System Tokens (Release 1.0.1) */
+    :root {
+      --ff-ink: #202020;
+      --ff-white: #FFFFFF;
+      --ff-surf-white: #FFFCF7;
+      --ff-cream: #F1EADA;
+      --ff-yellow: #FFBC00;
+      --ff-blue: #405DE6;
+      --ff-green: #558264;
+      --ff-red: #D04949;
+      --ff-border: #E1D7C4;
+      --ff-muted: #5C554A;
+      --ff-radius-container: 16px;
+      --ff-radius-pill: 9999px;
+      --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      background-color: var(--ff-surf-white);
+      color: var(--ff-ink);
+      font-family: var(--font-body);
+      min-height: 100dvh;
+      line-height: 1.5;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Straight Yellow Underline per Formula Fun Design System 1.0.1 */
+    .ff-underline {
+      display: inline;
+      background-image: linear-gradient(var(--ff-yellow), var(--ff-yellow));
+      background-repeat: no-repeat;
+      background-position: 0 91%;
+      background-size: 100% 12%;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    /* Sticky Top Bar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--ff-surf-white);
+      border-bottom: 1px solid var(--ff-border);
+      padding: calc(12px + var(--safe-top)) 20px 12px;
+    }
+
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .badge-mono {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background-color: var(--ff-ink);
+      color: var(--ff-yellow);
+      padding: 6px 12px;
+      border-radius: var(--ff-radius-pill);
+      white-space: nowrap;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--ff-ink);
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--ff-muted);
+      font-family: var(--font-mono);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Canonical Pill Buttons (Minimum 44x44pt touch target for iPhone Safari) */
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: var(--ff-radius-pill);
+      border: 1px solid var(--ff-border);
+      background-color: var(--ff-white);
+      color: var(--ff-ink);
+      text-decoration: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+      white-space: nowrap;
+    }
+
+    .btn-pill:active {
+      transform: translateY(1px);
+    }
+
+    .btn-pill.primary {
+      background-color: var(--ff-yellow);
+      border-color: var(--ff-ink);
+      color: var(--ff-ink);
+    }
+
+    .btn-pill.dark {
+      background-color: var(--ff-ink);
+      border-color: var(--ff-ink);
+      color: var(--ff-white);
+    }
+
+    .btn-pill.active-tab {
+      background-color: var(--ff-ink);
+      border-color: var(--ff-ink);
+      color: var(--ff-yellow);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 20px calc(48px + var(--safe-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Hero Banner */
+    .hero-card {
+      background-color: var(--ff-cream);
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-container);
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(24px, 3.2vw, 38px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+      margin-bottom: 12px;
+    }
+
+    .hero-copy p {
+      font-size: 15px;
+      color: var(--ff-muted);
+      max-width: 68ch;
+      margin-bottom: 16px;
+    }
+
+    .telemetry-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 10px;
+    }
+
+    .telemetry-cell {
+      background-color: var(--ff-surf-white);
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-container);
+      padding: 12px 14px;
+    }
+
+    .telemetry-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ff-muted);
+      margin-bottom: 4px;
+    }
+
+    .telemetry-val {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ff-ink);
+    }
+
+    /* Interactive 3D + AR Cockpit Grid */
+    .cockpit-grid {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .stage-card {
+      background-color: var(--ff-white);
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-container);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stage-toolbar {
+      padding: 14px 18px;
+      background-color: var(--ff-cream);
+      border-bottom: 1px solid var(--ff-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .group-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--ff-muted);
+      margin-right: 4px;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 620px;
+      background-color: var(--ff-surf-white);
+      --poster-color: transparent;
+    }
+
+    .stage-footer {
+      padding: 16px 18px;
+      background-color: var(--ff-surf-white);
+      border-top: 1px solid var(--ff-border);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .scrub-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .scrub-slider {
+      flex: 1;
+      min-width: 180px;
+      height: 44px;
+      accent-color: var(--ff-ink);
+      cursor: pointer;
+    }
+
+    .scrub-readout {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ff-ink);
+      min-width: 130px;
+      text-align: right;
+    }
+
+    /* Right Panel: iPhone AR Quick Look Cards & Part BOM */
+    .side-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .panel-card {
+      background-color: var(--ff-white);
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-container);
+      padding: 20px;
+    }
+
+    .panel-card h2 {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .panel-card p.sub {
+      font-size: 13px;
+      color: var(--ff-muted);
+      margin-bottom: 16px;
+    }
+
+    /* Native iOS Safari AR Quick Look Card Grid (requires <a rel="ar"><img/></a>) */
+    .ar-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .ar-launch-card {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--ff-surf-white);
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-container);
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--ff-ink);
+      transition: background-color 0.15s ease;
+    }
+
+    .ar-launch-card:active {
+      background-color: var(--ff-cream);
+    }
+
+    .ar-launch-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: contain;
+      background-color: var(--ff-white);
+      padding: 8px;
+      border-bottom: 1px solid var(--ff-border);
+    }
+
+    .ar-card-meta {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .ar-card-title {
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .ar-card-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ff-muted);
+    }
+
+    /* CAD BOM Table */
+    .bom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .bom-table th,
+    .bom-table td {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 1px solid var(--ff-border);
+    }
+
+    .bom-table th {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ff-muted);
+    }
+
+    .bom-table td.mono {
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    /* Side-by-Side Ground-Truth Visual Proof Section */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 20px;
+    }
+
+    .compare-card {
+      background-color: var(--ff-white);
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-container);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .compare-head {
+      padding: 12px 16px;
+      background-color: var(--ff-cream);
+      border-bottom: 1px solid var(--ff-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .compare-head h3 {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .compare-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: var(--ff-radius-pill);
+      background-color: var(--ff-ink);
+      color: var(--ff-white);
+    }
+
+    .compare-media {
+      padding: 16px;
+      background-color: var(--ff-surf-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 360px;
+    }
+
+    .compare-media img,
+    .compare-media video {
+      max-width: 100%;
+      max-height: 380px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .compare-foot {
+      padding: 12px 16px;
+      border-top: 1px solid var(--ff-border);
+      font-size: 12px;
+      color: var(--ff-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* Responsive iPhone Reflow (375px / 390px / 430px) */
+    @media (max-width: 1024px) {
+      .hero-card,
+      .cockpit-grid {
+        grid-template-columns: 1fr;
+      }
+      model-viewer {
+        height: 480px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: calc(10px + var(--safe-top)) 14px 10px;
+      }
+      main {
+        padding: 16px 14px calc(36px + var(--safe-bottom));
+        gap: 24px;
+      }
+      .hero-card {
+        padding: 16px;
+      }
+      model-viewer {
+        height: 400px;
+      }
+      .ar-grid {
+        grid-template-columns: 1fr;
+      }
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand-cluster">
+        <span class="badge-mono">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          CAD + AR VERIFIED
+        </span>
+        <div>
+          <div class="brand-title">Formula Fun 6'0" Jam — 3D &amp; Exploded Assembly Showcase</div>
+          <div class="brand-sub">JAM_Assem.SLDASM · SHA-256: 4c57d3044c34...4e20b · 10 CAD Parts (54,371 Tris)</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a rel="ar" href="Jam_60_Blackout_Single_Assembled.usdz?v=20261028e" class="btn-pill primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          Blackout Constructed (.USDZ)
+        </a>
+        <a rel="ar" href="Jam_60_Yellow_Single_Assembled.usdz?v=20261028e" class="btn-pill dark">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          Yellow Constructed (.USDZ)
+        </a>
+        <a rel="ar" href="Jam_60_Blackout_Single_Exploded.usdz?v=20261028e" class="btn-pill">
+          Blackout Exploded (.USDZ)
+        </a>
+        <a rel="ar" href="Jam_60_Yellow_Single_Exploded.usdz?v=20261028e" class="btn-pill">
+          Yellow Exploded (.USDZ)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Telemetry Strip -->
+    <section class="hero-card">
+      <div class="hero-copy">
+        <h1><span class="ff-underline">6'0" Jam Surfboard</span> — Ground-Truth CAD &amp; Twinnie-Style Exploded View</h1>
+        <p>Built directly from Marko Foam engineer Ilir Bordoniqi's native SolidWorks 2026 assembly (<code>JAM_Assem.SLDASM</code>). Includes both official colorways (<strong>Blackout</strong> and <strong>Mellow Yellow</strong>), static assembled 3D models, and the Twinnie-style exploded assembly showing the EVA traction deck pad, single center natural-wood composite stringer, recessed closed-cell Marko EPS foam core cavity, and Futures thruster fin system.</p>
+      </div>
+      <div class="telemetry-strip">
+        <div class="telemetry-cell">
+          <div class="telemetry-label">CAD Envelope</div>
+          <div class="telemetry-val">1830.3 × 537.3 × 115.3 mm</div>
+        </div>
+        <div class="telemetry-cell">
+          <div class="telemetry-label">Dimensions</div>
+          <div class="telemetry-val">6'0" × 21.15" × 4.54"</div>
+        </div>
+        <div class="telemetry-cell">
+          <div class="telemetry-label">Assembly Parts</div>
+          <div class="telemetry-val">9 Instances / 8 STLs</div>
+        </div>
+        <div class="telemetry-cell">
+          <div class="telemetry-label">Apple USDZ Check</div>
+          <div class="telemetry-val">4 / 4 PASS (usdchecker)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Single-Stringer Exploded Animation Videos (MP4) -->
+    <section>
+      <div class="section-header">
+        <h2><span class="ff-underline">Exploded Assembly Animation Videos</span> — Single Center Stringer (MP4)</h2>
+        <span class="brand-sub">00:04.00 · 24.00 FPS · 1920×1080 H.264 (+faststart · iOS Safari Verified)</span>
+      </div>
+      <div class="comparison-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>6'0" Jam Blackout — Single-Stringer Exploded Animation</h3>
+            <span class="compare-tag">00:04.00 · MP4</span>
+          </div>
+          <div class="compare-media" style="background-color: #FFFFFF; min-height: 260px;">
+            <video
+              src="renders/Jam_60_Blackout_Single_Animation.mp4?v=20261028e"
+              poster="renders/jam_blackout_single_exploded.png?v=20261028e"
+              playsinline
+              webkit-playsinline
+              muted
+              loop
+              autoplay
+              controls
+              preload="auto"
+              style="width: 100%; height: auto; max-height: 360px;">
+            </video>
+          </div>
+          <div class="compare-foot">
+            <span>Deck Pad · Single Center Wood Stringer · Marko EPS Cavity · 3 Futures Fin Boxes</span>
+            <a href="renders/Jam_60_Blackout_Single_Animation.mp4?v=20261028e" download class="btn-pill primary">Download MP4</a>
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>6'0" Jam Mellow Yellow — Single-Stringer Exploded Animation</h3>
+            <span class="compare-tag">00:04.00 · MP4</span>
+          </div>
+          <div class="compare-media" style="background-color: #FFFFFF; min-height: 260px;">
+            <video
+              src="renders/Jam_60_Yellow_Single_Animation.mp4?v=20261028e"
+              poster="renders/jam_yellow_single_exploded.png?v=20261028e"
+              playsinline
+              webkit-playsinline
+              muted
+              loop
+              autoplay
+              controls
+              preload="auto"
+              style="width: 100%; height: auto; max-height: 360px;">
+            </video>
+          </div>
+          <div class="compare-foot">
+            <span>Mellow Yellow (#F5B800) Deck Pad · Single Wood Stringer · Marko EPS Core</span>
+            <a href="renders/Jam_60_Yellow_Single_Animation.mp4?v=20261028e" download class="btn-pill primary">Download MP4</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive WebGL + AR Stage -->
+    <section class="cockpit-grid">
+      <div class="stage-card">
+        <div class="stage-toolbar">
+          <div class="control-group" role="group" aria-label="Colorway Selector">
+            <span class="group-label">Colorway:</span>
+            <button type="button" id="btnColorBlackout" class="btn-pill active-tab" onclick="setColorway('blackout')">Blackout</button>
+            <button type="button" id="btnColorYellow" class="btn-pill" onclick="setColorway('yellow')">Mellow Yellow</button>
+          </div>
+          <div class="control-group" role="group" aria-label="Assembly Mode Selector">
+            <span class="group-label">State:</span>
+            <button type="button" id="btnModeExploded" class="btn-pill active-tab" onclick="setAssemblyMode('exploded')">Exploded Loop</button>
+            <button type="button" id="btnModeAssembled" class="btn-pill" onclick="setAssemblyMode('assembled')">Constructed (Assembled)</button>
+          </div>
+          <div class="control-group" role="group" aria-label="Camera Presets">
+            <span class="group-label">Angle:</span>
+            <button type="button" class="btn-pill" onclick="setCameraAngle('twinnie')">Twinnie Iso</button>
+            <button type="button" class="btn-pill" onclick="setCameraAngle('deck')">Top Deck</button>
+            <button type="button" class="btn-pill" onclick="setCameraAngle('hull')">Bottom Thruster</button>
+          </div>
+        </div>
+
+        <model-viewer
+          id="jamViewer"
+          src="Jam_60_Blackout_Single_Exploded.glb?v=20261028e"
+          ios-src="Jam_60_Blackout_Single_Exploded.usdz?v=20261028e"
+          alt="Formula Fun 6'0 Jam 3D Surfboard Assembly"
+          ar
+          ar-modes="quick-look webxr scene-viewer"
+          camera-controls
+          touch-action="pan-y"
+          autoplay
+          animation-name="ExplodedLoop"
+          camera-orbit="-38deg 68deg 2.85m"
+          field-of-view="32deg"
+          shadow-intensity="0.4"
+          exposure="0.95">
+        </model-viewer>
+
+        <div class="stage-footer">
+          <div class="scrub-row">
+            <button type="button" id="btnPlayPause" class="btn-pill dark" onclick="togglePlayPause()">
+              <span id="playPauseLabel">Pause Loop</span>
+            </button>
+            <input
+              type="range"
+              id="explodeSlider"
+              class="scrub-slider"
+              min="0"
+              max="100"
+              value="100"
+              aria-label="Exploded View Scrub Slider"
+              oninput="scrubExploded(this.value)">
+            <div id="scrubReadout" class="scrub-readout">STATE: AUTO LOOP</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: One-Tap iPhone AR Quick Look Cards, Direct Model Downloads & SolidWorks BOM -->
+      <div class="side-stack">
+        <div class="panel-card">
+          <h2>iPhone Safari AR Quick Look &amp; 3D Model Downloads</h2>
+          <p class="sub">All models include embedded 4K Formula Fun branding, single center stringer, and flush constructed geometry (zero exposed stringer when constructed).</p>
+          <div class="ar-grid">
+            <a rel="ar" href="Jam_60_Blackout_Single_Assembled.usdz?v=20261028e" class="ar-launch-card">
+              <img src="renders/jam_blackout_deck_ortho.png?v=20261028e" alt="Blackout Constructed USDZ">
+              <div class="ar-card-meta">
+                <div class="ar-card-title">
+                  <span>Blackout · Constructed</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                </div>
+                <div class="ar-card-sub">USDZ · 19.6 MB · Flush Sealed</div>
+              </div>
+            </a>
+
+            <a rel="ar" href="Jam_60_Yellow_Single_Assembled.usdz?v=20261028e" class="ar-launch-card">
+              <img src="renders/jam_yellow_deck_ortho.png?v=20261028e" alt="Mellow Yellow Constructed USDZ">
+              <div class="ar-card-meta">
+                <div class="ar-card-title">
+                  <span>Yellow · Constructed</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                </div>
+                <div class="ar-card-sub">USDZ · 22.8 MB · Flush Sealed</div>
+              </div>
+            </a>
+
+            <a rel="ar" href="Jam_60_Blackout_Single_Exploded.usdz?v=20261028e" class="ar-launch-card">
+              <img src="renders/jam_blackout_single_exploded.png?v=20261028e" alt="Blackout Exploded USDZ">
+              <div class="ar-card-meta">
+                <div class="ar-card-title">
+                  <span>Blackout · Exploded</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                </div>
+                <div class="ar-card-sub">USDZ · 21.2 MB · Single Stringer</div>
+              </div>
+            </a>
+
+            <a rel="ar" href="Jam_60_Yellow_Single_Exploded.usdz?v=20261028e" class="ar-launch-card">
+              <img src="renders/jam_yellow_single_exploded.png?v=20261028e" alt="Mellow Yellow Exploded USDZ">
+              <div class="ar-card-meta">
+                <div class="ar-card-title">
+                  <span>Yellow · Exploded</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                </div>
+                <div class="ar-card-sub">USDZ · 24.9 MB · Single Stringer</div>
+              </div>
+            </a>
+          </div>
+
+          <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--ff-border); display: flex; flex-direction: column; gap: 8px;">
+            <div class="telemetry-label">Direct WebGL / CAD Downloads (.GLB Binary)</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <a href="Jam_60_Blackout_Single_Assembled.glb?v=20261028e" download="Jam_60_Blackout_Assembled.glb" class="btn-pill primary">Blackout Constructed (.GLB)</a>
+              <a href="Jam_60_Yellow_Single_Assembled.glb?v=20261028e" download="Jam_60_Yellow_Assembled.glb" class="btn-pill primary">Yellow Constructed (.GLB)</a>
+              <a href="Jam_60_Blackout_Single_Exploded.glb?v=20261028e" download="Jam_60_Blackout_Exploded.glb" class="btn-pill">Blackout Exploded (.GLB)</a>
+              <a href="Jam_60_Yellow_Single_Exploded.glb?v=20261028e" download="Jam_60_Yellow_Exploded.glb" class="btn-pill">Yellow Exploded (.GLB)</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <h2>SolidWorks CAD Bill of Materials</h2>
+          <p class="sub">Extracted from <code>JAM_Assem.SLDASM</code> (10 component instances).</p>
+          <table class="bom-table">
+            <thead>
+              <tr>
+                <th>CAD Part</th>
+                <th>Qty</th>
+                <th>Envelope (mm)</th>
+                <th>Material</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Jam_60</strong> (Core Cavity)</td>
+                <td class="mono">1</td>
+                <td class="mono">1830.3 × 537.3 × 115.3</td>
+                <td>Marko Closed-Cell EPS</td>
+              </tr>
+              <tr>
+                <td><strong>JAM_DCover</strong> (Deck Pad)</td>
+                <td class="mono">1</td>
+                <td class="mono">1716.1 × 408.4 × 5.1</td>
+                <td>Brushed EVA Traction</td>
+              </tr>
+              <tr>
+                <td><strong>JAM_Stringer</strong> (Center)</td>
+                <td class="mono">1</td>
+                <td class="mono">1685.0 × 59.6 × 18.8</td>
+                <td>Natural Wood Composite</td>
+              </tr>
+              <tr>
+                <td><strong>FB_75</strong> (Side Fin Boxes)</td>
+                <td class="mono">2</td>
+                <td class="mono">149.2 × 28.5 × 17.8</td>
+                <td>Futures Black Polymer</td>
+              </tr>
+              <tr>
+                <td><strong>FB_050</strong> (Center Fin Box)</td>
+                <td class="mono">1</td>
+                <td class="mono">149.9 × 32.0 × 17.2</td>
+                <td>Futures Black Polymer</td>
+              </tr>
+              <tr>
+                <td><strong>Fin_small_L/R/C</strong> (Thruster)</td>
+                <td class="mono">3</td>
+                <td class="mono">155.1 × 113.1 × 6.8</td>
+                <td>White Composite Thruster</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ground-Truth Visual Proof & Single-Stringer Renders -->
+    <section>
+      <div class="section-header">
+        <h2><span class="ff-underline">Ground-Truth Visual Proof</span> — Single-Stringer CAD Renders &amp; Photo Match</h2>
+      </div>
+
+      <div class="comparison-grid">
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>6'0" Jam — Blackout Single-Stringer Exploded CAD</h3>
+            <span class="compare-tag">3D CAD Render</span>
+          </div>
+          <div class="compare-media">
+            <img src="renders/jam_blackout_single_exploded.png?v=20261028e" alt="6'0 Jam Blackout Single-Stringer Exploded Render">
+          </div>
+          <div class="compare-foot">
+            <span>Deck Pad · Single Center Wood Stringer · Marko EPS Core · Fin Boxes</span>
+            <a href="renders/jam_blackout_single_exploded.png?v=20261028e" target="_blank" class="btn-pill">Open 2K PNG</a>
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>6'0" Jam — Mellow Yellow Single-Stringer Exploded CAD</h3>
+            <span class="compare-tag">3D CAD Render</span>
+          </div>
+          <div class="compare-media">
+            <img src="renders/jam_yellow_single_exploded.png?v=20261028e" alt="6'0 Jam Yellow Single-Stringer Exploded Render">
+          </div>
+          <div class="compare-foot">
+            <span>Mellow Yellow (#F5B800) EVA Deck Pad + Single Wood Stringer + Core</span>
+            <a href="renders/jam_yellow_single_exploded.png?v=20261028e" target="_blank" class="btn-pill">Open 2K PNG</a>
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>6'0" Jam Blackout — Full Single-Stringer Exploded Assembly</h3>
+            <span class="compare-tag">With Thruster Fins</span>
+          </div>
+          <div class="compare-media">
+            <img src="renders/jam_blackout_single_full_assembly.png?v=20261028e" alt="Jam Blackout Full Exploded Assembly with Thruster Fins">
+          </div>
+          <div class="compare-foot">
+            <span>Single Center Stringer + 3 Futures Fin Boxes + 3 Thruster Fins</span>
+            <a href="renders/jam_blackout_single_full_assembly.png?v=20261028e" target="_blank" class="btn-pill">Open 2K PNG</a>
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>6'0" Jam Mellow Yellow — Full Single-Stringer Exploded Assembly</h3>
+            <span class="compare-tag">With Thruster Fins</span>
+          </div>
+          <div class="compare-media">
+            <img src="renders/jam_yellow_single_full_assembly.png?v=20261028e" alt="Jam Yellow Full Exploded Assembly with Thruster Fins">
+          </div>
+          <div class="compare-foot">
+            <span>Single Center Stringer + 3 Futures Fin Boxes + 3 Thruster Fins</span>
+            <a href="renders/jam_yellow_single_full_assembly.png?v=20261028e" target="_blank" class="btn-pill">Open 2K PNG</a>
+          </div>
+        </div>
+
+        <!-- Orthographic Deck & Hull Photo Comparisons -->
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>Blackout — Official Photo vs. 3D Assembled Model</h3>
+            <span class="compare-tag">1:1 Photo Match</span>
+          </div>
+          <div class="compare-media" style="gap: 12px;">
+            <img src="references/Jam_Black.png" alt="Official Jam Blackout Photo" style="max-width: 47%;">
+            <img src="renders/jam_blackout_deck_ortho.png?v=20261028e" alt="3D Rendered Jam Blackout" style="max-width: 47%;">
+          </div>
+          <div class="compare-foot">
+            <span>Left: Jam_Black.png · Right: 3D Assembled GLB/USDZ Render</span>
+            <a href="renders/jam_blackout_deck_ortho.png?v=20261028e" target="_blank" class="btn-pill">Open Render</a>
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>Mellow Yellow — Official Photo vs. 3D Assembled Model</h3>
+            <span class="compare-tag">1:1 Photo Match</span>
+          </div>
+          <div class="compare-media" style="gap: 12px;">
+            <img src="references/Jam_Yellow.png" alt="Official Jam Yellow Photo" style="max-width: 47%;">
+            <img src="renders/jam_yellow_deck_ortho.png?v=20261028e" alt="3D Rendered Jam Yellow" style="max-width: 47%;">
+          </div>
+          <div class="compare-foot">
+            <span>Left: Jam_Yellow.png · Right: 3D Assembled GLB/USDZ Render</span>
+            <a href="renders/jam_yellow_deck_ortho.png?v=20261028e" target="_blank" class="btn-pill">Open Render</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const viewer = document.getElementById('jamViewer');
+    const playPauseLabel = document.getElementById('playPauseLabel');
+    const scrubReadout = document.getElementById('scrubReadout');
+    const explodeSlider = document.getElementById('explodeSlider');
+
+    let currentColorway = 'blackout';
+    let currentMode = 'exploded';
+    let isPlaying = true;
+    const CACHE_VER = 'v=20261028e';
+
+    function updateModelSource() {
+      const cap = currentColorway === 'blackout' ? 'Blackout' : 'Yellow';
+      const stateCap = currentMode === 'exploded' ? 'Exploded' : 'Assembled';
+      viewer.src = `Jam_60_${cap}_Single_${stateCap}.glb?${CACHE_VER}`;
+      viewer.iosSrc = `Jam_60_${cap}_Single_${stateCap}.usdz?${CACHE_VER}`;
+
+      if (currentMode === 'exploded') {
+        viewer.setAttribute('autoplay', '');
+        isPlaying = true;
+        playPauseLabel.textContent = 'Pause Loop';
+        scrubReadout.textContent = 'STATE: AUTO LOOP';
+      } else {
+        viewer.removeAttribute('autoplay');
+        isPlaying = false;
+        playPauseLabel.textContent = 'Static Mode';
+        scrubReadout.textContent = 'STATE: ASSEMBLED (0%)';
+        explodeSlider.value = 0;
+      }
+    }
+
+    function setColorway(color) {
+      currentColorway = color;
+      document.getElementById('btnColorBlackout').classList.toggle('active-tab', color === 'blackout');
+      document.getElementById('btnColorYellow').classList.toggle('active-tab', color === 'yellow');
+      updateModelSource();
+    }
+
+    function setAssemblyMode(mode) {
+      currentMode = mode;
+      document.getElementById('btnModeExploded').classList.toggle('active-tab', mode === 'exploded');
+      document.getElementById('btnModeAssembled').classList.toggle('active-tab', mode === 'assembled');
+      updateModelSource();
+    }
+
+    function setCameraAngle(preset) {
+      if (preset === 'twinnie') {
+        viewer.cameraOrbit = '-38deg 68deg 2.85m';
+        viewer.fieldOfView = '32deg';
+      } else if (preset === 'deck') {
+        viewer.cameraOrbit = '0deg 90deg 2.65m';
+        viewer.fieldOfView = '28deg';
+      } else if (preset === 'hull') {
+        viewer.cameraOrbit = '180deg 90deg 2.65m';
+        viewer.fieldOfView = '28deg';
+      }
+    }
+
+    function togglePlayPause() {
+      if (currentMode !== 'exploded') {
+        setAssemblyMode('exploded');
+        return;
+      }
+      if (isPlaying) {
+        viewer.pause();
+        isPlaying = false;
+        playPauseLabel.textContent = 'Play Loop';
+        scrubReadout.textContent = 'STATE: PAUSED';
+      } else {
+        viewer.play();
+        isPlaying = true;
+        playPauseLabel.textContent = 'Pause Loop';
+        scrubReadout.textContent = 'STATE: AUTO LOOP';
+      }
+    }
+
+    function scrubExploded(pct) {
+      if (currentMode !== 'exploded') {
+        setAssemblyMode('exploded');
+      }
+      viewer.pause();
+      isPlaying = false;
+      playPauseLabel.textContent = 'Play Loop';
+      // In our 10.0s (240 frame) animation:
+      // Frame 25 (1.04s) = 0% exploded, Frame 95 (3.96s) = 100% exploded
+      const t = 1.04 + (parseFloat(pct) / 100.0) * (3.96 - 1.04);
+      viewer.currentTime = t;
+      scrubReadout.textContent = `EXPLODED: ${pct}%`;
+    }
+  </script>
+</body>
+</html>
