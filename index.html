@@ -621,8 +621,8 @@
           </div>
           <div class="compare-media" style="background-color: #FFFFFF; min-height: 260px;">
             <video
-              src="renders/Jam_60_Blackout_Single_Animation.mp4?v=20261028e"
-              poster="renders/jam_blackout_single_exploded.png?v=20261028e"
+              src="renders/Jam_60_Blackout_Single_Animation.mp4?v=20261102a"
+              poster="renders/jam_blackout_exploded_hero_4k.png?v=20261102a"
               playsinline
               webkit-playsinline
               muted
@@ -635,7 +635,7 @@
           </div>
           <div class="compare-foot">
             <span>Deck Pad · Single Center Wood Stringer · Marko EPS Cavity · 3 Futures Fin Boxes</span>
-            <a href="renders/Jam_60_Blackout_Single_Animation.mp4?v=20261028e" download class="btn-pill primary">Download MP4</a>
+            <a href="renders/Jam_60_Blackout_Single_Animation.mp4?v=20261102a" download class="btn-pill primary">Download MP4</a>
           </div>
         </div>
 
@@ -646,8 +646,8 @@
           </div>
           <div class="compare-media" style="background-color: #FFFFFF; min-height: 260px;">
             <video
-              src="renders/Jam_60_Yellow_Single_Animation.mp4?v=20261028e"
-              poster="renders/jam_yellow_single_exploded.png?v=20261028e"
+              src="renders/Jam_60_Yellow_Single_Animation.mp4?v=20261102a"
+              poster="renders/jam_yellow_exploded_hero_4k.png?v=20261102a"
               playsinline
               webkit-playsinline
               muted
@@ -660,7 +660,7 @@
           </div>
           <div class="compare-foot">
             <span>Mellow Yellow (#F5B800) Deck Pad · Single Wood Stringer · Marko EPS Core</span>
-            <a href="renders/Jam_60_Yellow_Single_Animation.mp4?v=20261028e" download class="btn-pill primary">Download MP4</a>
+            <a href="renders/Jam_60_Yellow_Single_Animation.mp4?v=20261102a" download class="btn-pill primary">Download MP4</a>
           </div>
         </div>
       </div>
@@ -685,22 +685,32 @@
             <button type="button" class="btn-pill" onclick="setCameraAngle('twinnie')">Twinnie Iso</button>
             <button type="button" class="btn-pill" onclick="setCameraAngle('deck')">Top Deck</button>
             <button type="button" class="btn-pill" onclick="setCameraAngle('hull')">Bottom Thruster</button>
+            <button type="button" class="btn-pill" onclick="setCameraAngle('nose')">Nose Tip</button>
+            <button type="button" class="btn-pill" onclick="setCameraAngle('tail')">Tail Fin Macro</button>
+            <button type="button" class="btn-pill" onclick="setCameraAngle('rocker')">Rocker Profile</button>
+            <button type="button" class="btn-pill primary" onclick="resetCenterPivot()">Center Pivot (0,0,0)</button>
           </div>
         </div>
 
         <model-viewer
           id="jamViewer"
-          src="Jam_60_Blackout_Single_Exploded.glb?v=20261028e"
-          ios-src="Jam_60_Blackout_Single_Exploded.usdz?v=20261028e"
+          src="Jam_60_Blackout_Single_Exploded.glb?v=20261102a"
+          ios-src="Jam_60_Blackout_Single_Exploded.usdz?v=20261102a"
           alt="Formula Fun 6'0 Jam 3D Surfboard Assembly"
           ar
           ar-modes="quick-look webxr scene-viewer"
           camera-controls
-          touch-action="pan-y"
+          touch-action="none"
           autoplay
           animation-name="ExplodedLoop"
+          camera-target="0m 0m 0m"
           camera-orbit="-38deg 68deg 2.85m"
+          min-camera-orbit="-Infinity 0deg 0.4m"
+          max-camera-orbit="Infinity 180deg 12.0m"
           field-of-view="32deg"
+          min-field-of-view="8deg"
+          max-field-of-view="75deg"
+          interpolation-decay="120"
           shadow-intensity="0.4"
           exposure="0.95">
         </model-viewer>
@@ -721,6 +731,22 @@
               oninput="scrubExploded(this.value)">
             <div id="scrubReadout" class="scrub-readout">STATE: AUTO LOOP</div>
           </div>
+          <div class="scrub-row" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--ff-border);">
+            <span class="telemetry-label" style="min-width: 112px;">360° Pitch / Roll:</span>
+            <label style="font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; flex: 1;">
+              <span>Pitch</span>
+              <input type="range" id="pitchSlider" class="scrub-slider" min="-180" max="180" value="0" oninput="updateModelOrientation()" aria-label="360 Pitch Rotation">
+            </label>
+            <label style="font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; flex: 1;">
+              <span>Roll</span>
+              <input type="range" id="rollSlider" class="scrub-slider" min="-180" max="180" value="0" oninput="updateModelOrientation()" aria-label="360 Roll Rotation">
+            </label>
+            <label style="font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; flex: 1;">
+              <span>Yaw</span>
+              <input type="range" id="yawSlider" class="scrub-slider" min="-180" max="180" value="0" oninput="updateModelOrientation()" aria-label="360 Yaw Rotation">
+            </label>
+            <div id="orientReadout" class="scrub-readout">PIVOT: (0,0,0)</div>
+          </div>
         </div>
       </div>
 
@@ -730,58 +756,58 @@
           <h2>iPhone Safari AR Quick Look &amp; 3D Model Downloads</h2>
           <p class="sub">All models include embedded 4K Formula Fun branding, single center stringer, and flush constructed geometry (zero exposed stringer when constructed).</p>
           <div class="ar-grid">
-            <a rel="ar" href="Jam_60_Blackout_Single_Assembled.usdz?v=20261028e" class="ar-launch-card">
-              <img src="renders/jam_blackout_deck_ortho.png?v=20261028e" alt="Blackout Constructed USDZ">
+            <a rel="ar" href="Jam_60_Blackout_Single_Assembled.usdz?v=20261102a" class="ar-launch-card">
+              <img src="renders/jam_blackout_deck_ortho.png?v=20261102a" alt="Blackout Constructed USDZ">
               <div class="ar-card-meta">
                 <div class="ar-card-title">
                   <span>Blackout · Constructed</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                 </div>
-                <div class="ar-card-sub">USDZ · 19.6 MB · Flush Sealed</div>
+                <div class="ar-card-sub">USDZ · Center Pivot (0,0,0)</div>
               </div>
             </a>
 
-            <a rel="ar" href="Jam_60_Yellow_Single_Assembled.usdz?v=20261028e" class="ar-launch-card">
-              <img src="renders/jam_yellow_deck_ortho.png?v=20261028e" alt="Mellow Yellow Constructed USDZ">
+            <a rel="ar" href="Jam_60_Yellow_Single_Assembled.usdz?v=20261102a" class="ar-launch-card">
+              <img src="renders/jam_yellow_deck_ortho.png?v=20261102a" alt="Mellow Yellow Constructed USDZ">
               <div class="ar-card-meta">
                 <div class="ar-card-title">
                   <span>Yellow · Constructed</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                 </div>
-                <div class="ar-card-sub">USDZ · 22.8 MB · Flush Sealed</div>
+                <div class="ar-card-sub">USDZ · Center Pivot (0,0,0)</div>
               </div>
             </a>
 
-            <a rel="ar" href="Jam_60_Blackout_Single_Exploded.usdz?v=20261028e" class="ar-launch-card">
-              <img src="renders/jam_blackout_single_exploded.png?v=20261028e" alt="Blackout Exploded USDZ">
+            <a rel="ar" href="Jam_60_Blackout_Single_Exploded.usdz?v=20261102a" class="ar-launch-card">
+              <img src="renders/jam_blackout_exploded_hero_4k.png?v=20261102a" alt="Blackout Exploded USDZ">
               <div class="ar-card-meta">
                 <div class="ar-card-title">
                   <span>Blackout · Exploded</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                 </div>
-                <div class="ar-card-sub">USDZ · 21.2 MB · Single Stringer</div>
+                <div class="ar-card-sub">USDZ · Center Pivot · Single Stringer</div>
               </div>
             </a>
 
-            <a rel="ar" href="Jam_60_Yellow_Single_Exploded.usdz?v=20261028e" class="ar-launch-card">
-              <img src="renders/jam_yellow_single_exploded.png?v=20261028e" alt="Mellow Yellow Exploded USDZ">
+            <a rel="ar" href="Jam_60_Yellow_Single_Exploded.usdz?v=20261102a" class="ar-launch-card">
+              <img src="renders/jam_yellow_exploded_hero_4k.png?v=20261102a" alt="Mellow Yellow Exploded USDZ">
               <div class="ar-card-meta">
                 <div class="ar-card-title">
                   <span>Yellow · Exploded</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                 </div>
-                <div class="ar-card-sub">USDZ · 24.9 MB · Single Stringer</div>
+                <div class="ar-card-sub">USDZ · Center Pivot · Single Stringer</div>
               </div>
             </a>
           </div>
 
           <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--ff-border); display: flex; flex-direction: column; gap: 8px;">
-            <div class="telemetry-label">Direct WebGL / CAD Downloads (.GLB Binary)</div>
+            <div class="telemetry-label">Direct WebGL / CAD Downloads (.GLB Binary · Center Pivot 0,0,0)</div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <a href="Jam_60_Blackout_Single_Assembled.glb?v=20261028e" download="Jam_60_Blackout_Assembled.glb" class="btn-pill primary">Blackout Constructed (.GLB)</a>
-              <a href="Jam_60_Yellow_Single_Assembled.glb?v=20261028e" download="Jam_60_Yellow_Assembled.glb" class="btn-pill primary">Yellow Constructed (.GLB)</a>
-              <a href="Jam_60_Blackout_Single_Exploded.glb?v=20261028e" download="Jam_60_Blackout_Exploded.glb" class="btn-pill">Blackout Exploded (.GLB)</a>
-              <a href="Jam_60_Yellow_Single_Exploded.glb?v=20261028e" download="Jam_60_Yellow_Exploded.glb" class="btn-pill">Yellow Exploded (.GLB)</a>
+              <a href="Jam_60_Blackout_Single_Assembled.glb?v=20261102a" download="Jam_60_Blackout_Assembled.glb" class="btn-pill primary">Blackout Constructed (.GLB)</a>
+              <a href="Jam_60_Yellow_Single_Assembled.glb?v=20261102a" download="Jam_60_Yellow_Assembled.glb" class="btn-pill primary">Yellow Constructed (.GLB)</a>
+              <a href="Jam_60_Blackout_Single_Exploded.glb?v=20261102a" download="Jam_60_Blackout_Exploded.glb" class="btn-pill">Blackout Exploded (.GLB)</a>
+              <a href="Jam_60_Yellow_Single_Exploded.glb?v=20261102a" download="Jam_60_Yellow_Exploded.glb" class="btn-pill">Yellow Exploded (.GLB)</a>
             </div>
           </div>
         </div>
@@ -841,66 +867,94 @@
       </div>
     </section>
 
-    <!-- Ground-Truth Visual Proof & Single-Stringer Renders -->
+    <!-- Photorealistic 4K Raytraced Exploded View Hero Gallery -->
     <section>
       <div class="section-header">
-        <h2><span class="ff-underline">Ground-Truth Visual Proof</span> — Single-Stringer CAD Renders &amp; Photo Match</h2>
+        <h2><span class="ff-underline">Photorealistic 4K Hero Renders</span> — Raytraced Single-Stringer Exploded Views</h2>
       </div>
 
       <div class="comparison-grid">
         <div class="compare-card">
           <div class="compare-head">
-            <h3>6'0" Jam — Blackout Single-Stringer Exploded CAD</h3>
-            <span class="compare-tag">3D CAD Render</span>
+            <h3>6'0" Jam Blackout — 4K Studio Raytraced Exploded Hero</h3>
+            <span class="compare-tag">4K Cycles Hero (3840×2160)</span>
           </div>
           <div class="compare-media">
-            <img src="renders/jam_blackout_single_exploded.png?v=20261028e" alt="6'0 Jam Blackout Single-Stringer Exploded Render">
+            <img src="renders/jam_blackout_exploded_hero_4k.png?v=20261102a" alt="6'0 Jam Blackout 4K Photorealistic Studio Exploded Hero">
           </div>
           <div class="compare-foot">
-            <span>Deck Pad · Single Center Wood Stringer · Marko EPS Core · Fin Boxes</span>
-            <a href="renders/jam_blackout_single_exploded.png?v=20261028e" target="_blank" class="btn-pill">Open 2K PNG</a>
+            <span>Raytraced Inter-Layer Contact Shadows · Single Center Wood Stringer · Marko EPS Core</span>
+            <a href="renders/jam_blackout_exploded_hero_4k.png?v=20261102a" download="Jam_60_Blackout_Exploded_Hero_4K.png" target="_blank" class="btn-pill primary">Download 4K PNG</a>
           </div>
         </div>
 
         <div class="compare-card">
           <div class="compare-head">
-            <h3>6'0" Jam — Mellow Yellow Single-Stringer Exploded CAD</h3>
-            <span class="compare-tag">3D CAD Render</span>
+            <h3>6'0" Jam Mellow Yellow — 4K Studio Raytraced Exploded Hero</h3>
+            <span class="compare-tag">4K Cycles Hero (3840×2160)</span>
           </div>
           <div class="compare-media">
-            <img src="renders/jam_yellow_single_exploded.png?v=20261028e" alt="6'0 Jam Yellow Single-Stringer Exploded Render">
+            <img src="renders/jam_yellow_exploded_hero_4k.png?v=20261102a" alt="6'0 Jam Yellow 4K Photorealistic Studio Exploded Hero">
           </div>
           <div class="compare-foot">
-            <span>Mellow Yellow (#F5B800) EVA Deck Pad + Single Wood Stringer + Core</span>
-            <a href="renders/jam_yellow_single_exploded.png?v=20261028e" target="_blank" class="btn-pill">Open 2K PNG</a>
+            <span>Mellow Yellow (#F5B800) EVA Deck Pad · Single Wood Stringer · Raytraced Studio Cyclorama</span>
+            <a href="renders/jam_yellow_exploded_hero_4k.png?v=20261102a" download="Jam_60_Yellow_Exploded_Hero_4K.png" target="_blank" class="btn-pill primary">Download 4K PNG</a>
           </div>
         </div>
 
         <div class="compare-card">
           <div class="compare-head">
-            <h3>6'0" Jam Blackout — Full Single-Stringer Exploded Assembly</h3>
-            <span class="compare-tag">With Thruster Fins</span>
+            <h3>6'0" Jam Blackout — 4K Editorial Close-Up Exploded Hero</h3>
+            <span class="compare-tag">4K Editorial (3840×2160)</span>
           </div>
           <div class="compare-media">
-            <img src="renders/jam_blackout_single_full_assembly.png?v=20261028e" alt="Jam Blackout Full Exploded Assembly with Thruster Fins">
+            <img src="renders/jam_blackout_exploded_editorial_4k.png?v=20261102a" alt="Jam Blackout 4K Editorial Exploded Hero">
           </div>
           <div class="compare-foot">
-            <span>Single Center Stringer + 3 Futures Fin Boxes + 3 Thruster Fins</span>
-            <a href="renders/jam_blackout_single_full_assembly.png?v=20261028e" target="_blank" class="btn-pill">Open 2K PNG</a>
+            <span>Close-Up Architectural 3/4 Perspective · Full Stringer &amp; Recessed Cavity Detail</span>
+            <a href="renders/jam_blackout_exploded_editorial_4k.png?v=20261102a" download="Jam_60_Blackout_Exploded_Editorial_4K.png" target="_blank" class="btn-pill primary">Download 4K PNG</a>
           </div>
         </div>
 
         <div class="compare-card">
           <div class="compare-head">
-            <h3>6'0" Jam Mellow Yellow — Full Single-Stringer Exploded Assembly</h3>
-            <span class="compare-tag">With Thruster Fins</span>
+            <h3>6'0" Jam Mellow Yellow — 4K Editorial Close-Up Exploded Hero</h3>
+            <span class="compare-tag">4K Editorial (3840×2160)</span>
           </div>
           <div class="compare-media">
-            <img src="renders/jam_yellow_single_full_assembly.png?v=20261028e" alt="Jam Yellow Full Exploded Assembly with Thruster Fins">
+            <img src="renders/jam_yellow_exploded_editorial_4k.png?v=20261102a" alt="Jam Yellow 4K Editorial Exploded Hero">
           </div>
           <div class="compare-foot">
-            <span>Single Center Stringer + 3 Futures Fin Boxes + 3 Thruster Fins</span>
-            <a href="renders/jam_yellow_single_full_assembly.png?v=20261028e" target="_blank" class="btn-pill">Open 2K PNG</a>
+            <span>Close-Up Architectural 3/4 Perspective · Full Stringer &amp; Recessed Cavity Detail</span>
+            <a href="renders/jam_yellow_exploded_editorial_4k.png?v=20261102a" download="Jam_60_Yellow_Exploded_Editorial_4K.png" target="_blank" class="btn-pill primary">Download 4K PNG</a>
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>6'0" Jam — Blackout Transparent Twinnie Exploded CAD</h3>
+            <span class="compare-tag">2.5K Transparent PNG</span>
+          </div>
+          <div class="compare-media">
+            <img src="renders/jam_blackout_single_exploded.png?v=20261102a" alt="6'0 Jam Blackout Single-Stringer Exploded Render">
+          </div>
+          <div class="compare-foot">
+            <span>Transparent Alpha · Deck Pad · Single Center Wood Stringer · Marko EPS Core · Fin Boxes</span>
+            <a href="renders/jam_blackout_single_exploded.png?v=20261102a" target="_blank" class="btn-pill">Open 2.5K PNG</a>
+          </div>
+        </div>
+
+        <div class="compare-card">
+          <div class="compare-head">
+            <h3>6'0" Jam — Mellow Yellow Transparent Twinnie Exploded CAD</h3>
+            <span class="compare-tag">2.5K Transparent PNG</span>
+          </div>
+          <div class="compare-media">
+            <img src="renders/jam_yellow_single_exploded.png?v=20261102a" alt="6'0 Jam Yellow Single-Stringer Exploded Render">
+          </div>
+          <div class="compare-foot">
+            <span>Transparent Alpha · Mellow Yellow (#F5B800) EVA Deck Pad + Single Wood Stringer + Core</span>
+            <a href="renders/jam_yellow_single_exploded.png?v=20261102a" target="_blank" class="btn-pill">Open 2.5K PNG</a>
           </div>
         </div>
 
@@ -912,11 +966,11 @@
           </div>
           <div class="compare-media" style="gap: 12px;">
             <img src="references/Jam_Black.png" alt="Official Jam Blackout Photo" style="max-width: 47%;">
-            <img src="renders/jam_blackout_deck_ortho.png?v=20261028e" alt="3D Rendered Jam Blackout" style="max-width: 47%;">
+            <img src="renders/jam_blackout_deck_ortho.png?v=20261102a" alt="3D Rendered Jam Blackout" style="max-width: 47%;">
           </div>
           <div class="compare-foot">
             <span>Left: Jam_Black.png · Right: 3D Assembled GLB/USDZ Render</span>
-            <a href="renders/jam_blackout_deck_ortho.png?v=20261028e" target="_blank" class="btn-pill">Open Render</a>
+            <a href="renders/jam_blackout_deck_ortho.png?v=20261102a" target="_blank" class="btn-pill">Open Render</a>
           </div>
         </div>
 
@@ -927,11 +981,11 @@
           </div>
           <div class="compare-media" style="gap: 12px;">
             <img src="references/Jam_Yellow.png" alt="Official Jam Yellow Photo" style="max-width: 47%;">
-            <img src="renders/jam_yellow_deck_ortho.png?v=20261028e" alt="3D Rendered Jam Yellow" style="max-width: 47%;">
+            <img src="renders/jam_yellow_deck_ortho.png?v=20261102a" alt="3D Rendered Jam Yellow" style="max-width: 47%;">
           </div>
           <div class="compare-foot">
             <span>Left: Jam_Yellow.png · Right: 3D Assembled GLB/USDZ Render</span>
-            <a href="renders/jam_yellow_deck_ortho.png?v=20261028e" target="_blank" class="btn-pill">Open Render</a>
+            <a href="renders/jam_yellow_deck_ortho.png?v=20261102a" target="_blank" class="btn-pill">Open Render</a>
           </div>
         </div>
       </div>
@@ -943,23 +997,36 @@
     const playPauseLabel = document.getElementById('playPauseLabel');
     const scrubReadout = document.getElementById('scrubReadout');
     const explodeSlider = document.getElementById('explodeSlider');
+    const pitchSlider = document.getElementById('pitchSlider');
+    const rollSlider = document.getElementById('rollSlider');
+    const yawSlider = document.getElementById('yawSlider');
+    const orientReadout = document.getElementById('orientReadout');
 
     let currentColorway = 'blackout';
     let currentMode = 'exploded';
     let isPlaying = true;
-    const CACHE_VER = 'v=20261028e';
+    const CACHE_VER = 'v=20261102a';
+
+    // Always lock camera-target to exact geometric center (0m, 0m, 0m) and full orbit range on model load
+    viewer.addEventListener('load', () => {
+      viewer.cameraTarget = '0m 0m 0m';
+      viewer.minCameraOrbit = '-Infinity 0deg 0.4m';
+      viewer.maxCameraOrbit = 'Infinity 180deg 12.0m';
+    });
 
     function updateModelSource() {
       const cap = currentColorway === 'blackout' ? 'Blackout' : 'Yellow';
       const stateCap = currentMode === 'exploded' ? 'Exploded' : 'Assembled';
       viewer.src = `Jam_60_${cap}_Single_${stateCap}.glb?${CACHE_VER}`;
       viewer.iosSrc = `Jam_60_${cap}_Single_${stateCap}.usdz?${CACHE_VER}`;
+      viewer.cameraTarget = '0m 0m 0m';
 
       if (currentMode === 'exploded') {
         viewer.setAttribute('autoplay', '');
         isPlaying = true;
         playPauseLabel.textContent = 'Pause Loop';
         scrubReadout.textContent = 'STATE: AUTO LOOP';
+        explodeSlider.value = 100;
       } else {
         viewer.removeAttribute('autoplay');
         isPlaying = false;
@@ -983,7 +1050,28 @@
       updateModelSource();
     }
 
+    function updateModelOrientation() {
+      const pitch = parseFloat(pitchSlider.value) || 0;
+      const roll = parseFloat(rollSlider.value) || 0;
+      const yaw = parseFloat(yawSlider.value) || 0;
+      viewer.orientation = `${roll}deg ${pitch}deg ${yaw}deg`;
+      viewer.cameraTarget = '0m 0m 0m';
+      orientReadout.textContent = `P:${pitch}° R:${roll}° Y:${yaw}°`;
+    }
+
+    function resetCenterPivot() {
+      pitchSlider.value = 0;
+      rollSlider.value = 0;
+      yawSlider.value = 0;
+      viewer.orientation = '0deg 0deg 0deg';
+      viewer.cameraTarget = '0m 0m 0m';
+      viewer.cameraOrbit = '-38deg 68deg 2.85m';
+      viewer.fieldOfView = '32deg';
+      orientReadout.textContent = 'PIVOT: (0,0,0)';
+    }
+
     function setCameraAngle(preset) {
+      viewer.cameraTarget = '0m 0m 0m';
       if (preset === 'twinnie') {
         viewer.cameraOrbit = '-38deg 68deg 2.85m';
         viewer.fieldOfView = '32deg';
@@ -993,6 +1081,15 @@
       } else if (preset === 'hull') {
         viewer.cameraOrbit = '180deg 90deg 2.65m';
         viewer.fieldOfView = '28deg';
+      } else if (preset === 'nose') {
+        viewer.cameraOrbit = '0deg 12deg 2.15m';
+        viewer.fieldOfView = '28deg';
+      } else if (preset === 'tail') {
+        viewer.cameraOrbit = '160deg 145deg 1.85m';
+        viewer.fieldOfView = '26deg';
+      } else if (preset === 'rocker') {
+        viewer.cameraOrbit = '-90deg 90deg 2.65m';
+        viewer.fieldOfView = '26deg';
       }
     }
 
@@ -1021,9 +1118,9 @@
       viewer.pause();
       isPlaying = false;
       playPauseLabel.textContent = 'Play Loop';
-      // In our 10.0s (240 frame) animation:
-      // Frame 25 (1.04s) = 0% exploded, Frame 95 (3.96s) = 100% exploded
-      const t = 1.04 + (parseFloat(pct) / 100.0) * (3.96 - 1.04);
+      // In our 10.0s (240 frame @ 24fps) animation:
+      // Frame 35 (1.46s) = 100% exploded, Frame 100 (4.17s) = 0% assembled
+      const t = 4.17 - (parseFloat(pct) / 100.0) * (4.17 - 1.46);
       viewer.currentTime = t;
       scrubReadout.textContent = `EXPLODED: ${pct}%`;
     }

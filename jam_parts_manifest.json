@@ -1,0 +1,162 @@
+{
+  "Jam_60": {
+    "faces": 905,
+    "triangles": 15754,
+    "bbox_min_m": [
+      0.0,
+      -0.268613,
+      -0.001688
+    ],
+    "bbox_max_m": [
+      1.83031,
+      0.268613,
+      0.113607
+    ],
+    "dims_m": [
+      1.83031,
+      0.537227,
+      0.115295
+    ],
+    "stl_path": "/Volumes/T9/Workspace/projects/Formula Fun/3D Product Files/Jam_60_CAD/parts/Jam_60.stl"
+  },
+  "FB_050": {
+    "faces": 78,
+    "triangles": 3050,
+    "bbox_min_m": [
+      -0.041402,
+      -0.187757,
+      -0.022149
+    ],
+    "bbox_max_m": [
+      -0.009398,
+      -0.038024,
+      0.000635
+    ],
+    "dims_m": [
+      0.032004,
+      0.149733,
+      0.022784
+    ],
+    "stl_path": "/Volumes/T9/Workspace/projects/Formula Fun/3D Product Files/Jam_60_CAD/parts/FB_050.stl"
+  },
+  "FB_75": {
+    "faces": 48,
+    "triangles": 1020,
+    "bbox_min_m": [
+      -0.074559,
+      -0.038748,
+      -0.015557
+    ],
+    "bbox_max_m": [
+      0.074559,
+      0.000635,
+      0.015557
+    ],
+    "dims_m": [
+      0.149119,
+      0.039383,
+      0.031115
+    ],
+    "stl_path": "/Volumes/T9/Workspace/projects/Formula Fun/3D Product Files/Jam_60_CAD/parts/FB_75.stl"
+  },
+  "Fin_small_Center": {
+    "faces": 150,
+    "triangles": 8362,
+    "bbox_min_m": [
+      -0.060337,
+      -0.00753,
+      -0.175283
+    ],
+    "bbox_max_m": [
+      0.101276,
+      0.007372,
+      -0.009786
+    ],
+    "dims_m": [
+      0.161613,
+      0.014902,
+      0.165497
+    ],
+    "stl_path": "/Volumes/T9/Workspace/projects/Formula Fun/3D Product Files/Jam_60_CAD/parts/Fin_small_Center.stl"
+  },
+  "Fin_small_Left": {
+    "faces": 180,
+    "triangles": 7721,
+    "bbox_min_m": [
+      -0.060716,
+      -0.000794,
+      -0.176418
+    ],
+    "bbox_max_m": [
+      0.102409,
+      0.007373,
+      -0.010996
+    ],
+    "dims_m": [
+      0.163124,
+      0.008166,
+      0.165422
+    ],
+    "stl_path": "/Volumes/T9/Workspace/projects/Formula Fun/3D Product Files/Jam_60_CAD/parts/Fin_small_Left.stl"
+  },
+  "Fin_small_Right_Mirror": {
+    "faces": 180,
+    "triangles": 7512,
+    "bbox_min_m": [
+      -0.06079,
+      -0.00896,
+      -0.176505
+    ],
+    "bbox_max_m": [
+      0.102409,
+      -0.000794,
+      -0.010996
+    ],
+    "dims_m": [
+      0.163199,
+      0.008166,
+      0.165508
+    ],
+    "stl_path": "/Volumes/T9/Workspace/projects/Formula Fun/3D Product Files/Jam_60_CAD/parts/Fin_small_Right_Mirror.stl"
+  },
+  "JAM_Stringer": {
+    "faces": 18,
+    "triangles": 774,
+    "bbox_min_m": [
+      -1.684933,
+      -0.058006,
+      -0.01905
+    ],
+    "bbox_max_m": [
+      2.5e-05,
+      0.00161,
+      -0.000254
+    ],
+    "dims_m": [
+      1.684959,
+      0.059615,
+      0.018796
+    ],
+    "stl_path": "/Volumes/T9/Workspace/projects/Formula Fun/3D Product Files/Jam_60_CAD/parts/JAM_Stringer.stl"
+  },
+  "JAM_DCover": {
+    "faces": 100,
+    "triangles": 8308,
+    "bbox_min_m": [
+      0.050758,
+      -0.2042,
+      0.12446
+    ],
+    "bbox_max_m": [
+      1.766818,
+      0.2042,
+      0.12954
+    ],
+    "dims_m": [
+      1.71606,
+      0.4084,
+      0.00508
+    ],
+    "stl_path": "/Volumes/T9/Workspace/projects/Formula Fun/3D Product Files/Jam_60_CAD/parts/JAM_DCover.stl"
+  }
+}
