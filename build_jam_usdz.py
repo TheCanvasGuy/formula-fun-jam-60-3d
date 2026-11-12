@@ -63,17 +63,27 @@ SW_INSTANCES = [
         "sw_dz_to_assembled": 0.0,
         "assembled_dz": 0.0,
         "exploded_dz": +0.2850,
-        "twinnie_dz": +0.2950,     # Lifts +0.2950m above assembled deck so full single stringer is 100% visible
+        "twinnie_dz": +0.2950,     # Lifts +0.2950m above assembled deck so full dual stringers are 100% visible
     },
     {
-        "name": "JAM_Stringer",
+        "name": "JAM_Stringer_Left",
         "stl": "JAM_Stringer.stl",
         "role": "stringer",
-        "sw_matrix": [1, 0, 0, 0, 0, -3.491481338843133e-15, 1, 0, 0, -1, -3.491481338843133e-15, 0, 1.755936364195265, -0.009652, 0.166710974115954, 1],
+        "sw_matrix": [1, 0, 0, 0, 0, -3.491481338843133e-15, 1, 0, 0, -1, -3.491481338843133e-15, 0, 1.755936364195265, 0.05074599999998086, 0.166710974115954, 1],
         "sw_dz_to_assembled": 0.0,
         "assembled_dz": 0.0,
         "exploded_dz": +0.1480,
-        "twinnie_dz": +0.1480,     # Single center stringer (Y_sw = 0.0) lifting +0.1480m halfway between core cavity and deck pad
+        "twinnie_dz": +0.1480,     # Native SolidWorks swID=68 Left Stringer (+60.40 mm off-center)
+    },
+    {
+        "name": "JAM_Stringer_Right",
+        "stl": "JAM_Stringer.stl",
+        "role": "stringer",
+        "sw_matrix": [1, 0, 0, 0, 0, 3.491481338843133e-15, 1, 0, 0, -1, 3.491481338843133e-15, 0, 1.755936364195265, -0.07004999999998086, 0.1667109741159541, 1],
+        "sw_dz_to_assembled": 0.0,
+        "assembled_dz": 0.0,
+        "exploded_dz": +0.1480,
+        "twinnie_dz": +0.1480,     # Native SolidWorks swID=73 Right Stringer (-60.40 mm off-center)
     },
     {
         "name": "FB_050_CenterBox",
@@ -138,10 +148,10 @@ SW_INSTANCES = [
 ]
 
 # Center of Jam_60_Core at the exact geometric middle of the board:
-# X in [0.0000, 1.8303] -> X_mid = 0.91515 m (longitudinal midpoint of 6'0" board)
-# Y in [-0.2686, +0.2686] -> Y_mid = 0.0 m (lateral centerline)
+# X in [0.0000000, 1.8303102] -> X_mid = 0.9151551 m (exact longitudinal midpoint of 6'0" board)
+# Y in [-0.2686133, +0.2686133] -> Y_mid = 0.0 m (lateral centerline)
 # Z at longitudinal middle (hull=0.000, deck=0.076, overall rocker mid=0.045) -> Z_mid = 0.0450 m
-SW_CENTER_X = 0.91515
+SW_CENTER_X = 0.9151551
 SW_CENTER_Y = 0.0
 SW_CENTER_Z = 0.0450
 
@@ -361,11 +371,12 @@ def drape_mesh_to_jam_rocker(mesh, role, bvh_core, sw_dz_to_assembled=0.0):
                     v.co.z -= 0.0018
     elif role == "pocket":
         # Smooth CAD cavity floor liner draped directly on Jam_60_Core's pocket floor (+1.2mm clear of raw core floor)
+        # with symmetrical dual stringer channels at Y_sw in [+-0.0510m, +-0.0698m]
         z_ref_bot = 0.3232
         for v in mesh.vertices:
             z_floor = sample_core_deck_z(bvh_core, v.co.x, v.co.y)
             local_h = (v.co.z - z_ref_bot) * 0.12  # 0.0 to 0.0006m thin liner
-            recess_str = -0.0032 if (0.13 < v.co.x < 1.74 and abs(v.co.y) <= 0.0105) else 0.0
+            recess_str = -0.0032 if (0.11 < v.co.x < 1.71 and 0.0505 <= abs(v.co.y) <= 0.0703) else 0.0
             v.co.z = z_floor + 0.0008 + recess_str + local_h
     elif role == "deck":
         # JAM_DCover has v.co.z in [0.3232, 0.3283] (5.1mm thick).
@@ -376,21 +387,27 @@ def drape_mesh_to_jam_rocker(mesh, role, bvh_core, sw_dz_to_assembled=0.0):
             local_h = v.co.z - z_ref_bot
             v.co.z = z_floor + 0.0005 + local_h
     elif role == "stringer":
-        # Build BVHTree on JAM_Stringer's own SolidWorks mesh so we preserve 100% of its cross-sectional
-        # thickness while seating its top surface 4.9 mm below JAM_DCover's top surface across the entire
-        # nonlinear rocker curve (guaranteed 0 vertices above deck and 0 vertices below hull at scale=1.0).
+        # Build BVHTree on JAM_Stringer's own SolidWorks mesh (Left at Y=+0.0604m or Right at Y=-0.0604m)
+        # so we preserve 100% of its cross-sectional thickness while seating its top surface cleanly inside
+        # the recessed pocket floor AND smoothly tucking the nose (x > 1.70) and tail (x < 0.12) tips
+        # 3.8 mm beneath the solid EPS nose/tail rim (guaranteed 0 vertices protruding at constant scale=1.0).
         bm_str = bmesh.new()
         bm_str.from_mesh(mesh)
         bvh_str = BVHTree.FromBMesh(bm_str)
         bm_str.free()
+        ys = [v.co.y for v in mesh.vertices]
+        y_mid = 0.5 * (min(ys) + max(ys))
         for v in mesh.vertices:
             sx = max(0.072, min(1.755, v.co.x))
-            loc_s, _, _, _ = bvh_str.ray_cast(Vector((sx, 0.0, 1.0)), Vector((0.0, 0.0, -1.0)))
+            loc_s, _, _, _ = bvh_str.ray_cast(Vector((sx, y_mid, 1.0)), Vector((0.0, 0.0, -1.0)))
             z_s_top = loc_s.z if loc_s is not None else v.co.z
             depth = max(0.0, z_s_top - v.co.z)
-            z_fl = sample_core_deck_z(bvh_core, v.co.x, 0.0)
-            z_hl = sample_core_hull_z(bvh_core, v.co.x, 0.0)
-            v.co.z = max(z_hl + 0.0040, (z_fl + 0.0007) - depth)
+            z_fl_center = sample_core_deck_z(bvh_core, v.co.x, 0.0)
+            z_hl_xy = sample_core_hull_z(bvh_core, v.co.x, v.co.y)
+            # Continuous centerline rocker curve (-3.2mm below center pocket floor): zero step across pocket boundary,
+            # >=1.8mm below JAM_DCover top everywhere and >=3.7mm below solid EPS nose/tail rim (0/388 protruding vertices)
+            z_top_cap = z_fl_center - 0.0032
+            v.co.z = max(z_hl_xy + 0.0040, z_top_cap - depth)
     else:
         # Fin boxes and thruster fins: bake sw_dz_to_assembled directly into vertices
         if abs(sw_dz_to_assembled) > 1e-6:
@@ -423,8 +440,12 @@ def assign_uvs_in_sw_space(mesh, role):
                     v = (v_co.x - x_min) / (x_max - x_min)
                     uv_layer.data[loop_idx].uv = (max(0.002, min(0.998, u)), max(0.002, min(0.998, v)))
             else:
+                # Non-degenerate solid-border UVs on perimeter bevel wall (prevents 0/0 NaN tangent fireflies in Cycles)
                 for loop_idx in poly.loop_indices:
-                    uv_layer.data[loop_idx].uv = (0.02, 0.20)
+                    v_co = mesh.vertices[mesh.loops[loop_idx].vertex_index].co
+                    u_edge = 0.015 + 0.020 * ((v_co.x * 2.5 + v_co.y * 2.5) % 1.0)
+                    v_edge = 0.140 + 0.025 * ((v_co.z * 18.0) % 1.0)
+                    uv_layer.data[loop_idx].uv = (u_edge, v_edge)
     elif role in ("core", "pocket"):
         scale = 3.2
         for poly in mesh.polygons:
@@ -440,10 +461,16 @@ def assign_uvs_in_sw_space(mesh, role):
                     uv = (co.y * scale, co.z * scale)
                 uv_layer.data[loop_idx].uv = (uv[0] % 1.0, uv[1] % 1.0)
     else:
+        # Triplanar lengthwise wood/polymer UVs so end-caps also have valid non-degenerate UVs
         for poly in mesh.polygons:
+            n = poly.normal
+            ax, ay, az = abs(n.x), abs(n.y), abs(n.z)
             for loop_idx in poly.loop_indices:
                 co = mesh.vertices[mesh.loops[loop_idx].vertex_index].co
-                uv_layer.data[loop_idx].uv = ((co.x * 0.6) % 1.0, ((co.y + co.z) * 4.0) % 1.0)
+                if ax > 0.75:
+                    uv_layer.data[loop_idx].uv = ((co.y * 6.0) % 1.0, (co.z * 6.0) % 1.0)
+                else:
+                    uv_layer.data[loop_idx].uv = ((co.x * 0.6) % 1.0, ((co.y + co.z) * 4.0) % 1.0)
 
 
 def create_deck_plugs_and_handle_recess(mats, bvh_core):
@@ -575,7 +602,22 @@ def build_scene_for_colorway(colorway="blackout"):
             bm_bal.free()
             mesh.update()
 
-        # Smooth shading
+        # Split sharp (>42 deg) CAD edges on deck pad, stringers, and fin boxes so 90-degree perimeter walls
+        # and wood stringer end-caps have crisp physical normals with zero normal-smearing across sharp corners
+        if item["role"] in ("deck", "stringer", "finbox"):
+            bm_sharp = bmesh.new()
+            bm_sharp.from_mesh(mesh)
+            sharp_edges = [
+                e for e in bm_sharp.edges
+                if len(e.link_faces) == 2 and e.calc_face_angle(0.0) > math.radians(42.0)
+            ]
+            if sharp_edges:
+                bmesh.ops.split_edges(bm_sharp, edges=sharp_edges)
+            bm_sharp.to_mesh(mesh)
+            bm_sharp.free()
+            mesh.update()
+
+        # Smooth shading across continuous curved surfaces
         for poly in mesh.polygons:
             poly.use_smooth = True
 
@@ -714,12 +756,47 @@ def aim_camera(cam_obj, loc, target=(0.0, 0.0, 0.0), roll_deg=0.0, up_vec=None):
         cam_obj.rotation_euler = (mat @ roll_mat).to_euler()
 
 
-def package_usdz_from_usdc(usdc_path, usdz_path, colorway, include_internal_textures=True):
+def package_usdz_from_usdc(usdc_path, usdz_path, colorway, is_exploded=False, include_internal_textures=True):
     usda_path = usdc_path.replace(".usdc", ".usda")
     subprocess.run(["/usr/bin/usdcat", "-o", usda_path, usdc_path], cwd=BASE_DIR, check=True)
     with open(usda_path, "r") as f:
         txt = f.read()
     txt = re.sub(r"@[^@]*textures/", r"@textures/", txt)
+
+    # Author explicit mid-section (0, 0, 0) pivot, symmetric GeomModelAPI extentsHint, and
+    # Preliminary_AnchoringAPI (preliminary:anchoring:type = "none") on /root so AR Quick Look &
+    # RealityKit anchor at the mid-section of the board (not the bottom tail) with full 360 rotation.
+    z_bound = 0.51745 if is_exploded else 0.20745
+    old_root_block = '''def Xform "root" (
+    customData = {
+        dictionary Blender = {
+            bool generated = 1
+        }
+    }
+)
+{
+    float3 xformOp:rotateXYZ = (-90, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:rotateXYZ"]'''
+    new_root_block = f'''def Xform "root" (
+    kind = "component"
+    prepend apiSchemas = ["GeomModelAPI", "Preliminary_AnchoringAPI"]
+    customData = {{
+        dictionary Blender = {{
+            bool generated = 1
+        }}
+    }}
+)
+{{
+    float3[] extentsHint = [(-0.2686133, -0.9151551, -{z_bound}), (0.2686133, 0.9151551, {z_bound})]
+    uniform token preliminary:anchoring:type = "none"
+    float3 xformOp:translate:pivot = (0, 0, 0)
+    float3 xformOp:rotateXYZ = (-90, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate:pivot", "xformOp:rotateXYZ", "!invert!xformOp:translate:pivot"]'''
+    if old_root_block in txt:
+        txt = txt.replace(old_root_block, new_root_block, 1)
+    else:
+        print(f"[WARN] Could not match exact /root block in {usda_path}")
+
     with open(usda_path, "w") as f:
         f.write(txt)
     subprocess.run(["/usr/bin/usdcat", "-o", usdc_path, usda_path], cwd=BASE_DIR, check=True)
@@ -754,8 +831,17 @@ def package_usdz_from_usdc(usdc_path, usdz_path, colorway, include_internal_text
         cwd=BASE_DIR,
         check=True,
     )
-    chk = subprocess.run(["/usr/bin/usdchecker", usdz_path], cwd=BASE_DIR, capture_output=True, text=True)
-    print(f"[USDCHECKER] {os.path.basename(usdz_path)}: rc={chk.returncode} {chk.stdout.strip()}")
+    if os.path.exists(usdc_path):
+        os.remove(usdc_path)
+    chk = subprocess.run(
+        ["/usr/bin/usdchecker", "--arkit", "-t", "-v", usdz_path],
+        cwd=BASE_DIR,
+        capture_output=True,
+        text=True,
+    )
+    print(f"[USDCHECKER --arkit -t] {os.path.basename(usdz_path)}: rc={chk.returncode} {chk.stdout.strip()}")
+    if chk.returncode != 0:
+        raise RuntimeError(f"usdchecker --arkit failed for {usdz_path}: {chk.stderr}")
     print(f"[SUCCESS] Packaged Apple AR USDZ: {usdz_path} ({os.path.getsize(usdz_path):,} bytes)")
 
 
@@ -831,7 +917,9 @@ def bake_animation_and_export(scene, objects_by_name, colorway="blackout"):
         export_uvmaps=True,
         export_normals=True,
     )
-    package_usdz_from_usdc(usdc_assembled, usdz_assembled, colorway, include_internal_textures=False)
+    package_usdz_from_usdc(
+        usdc_assembled, usdz_assembled, colorway, is_exploded=False, include_internal_textures=False
+    )
 
     # 2. Bake 240-frame (10s @ 24fps) seamless Exploded animation loop with symmetric +/-0.51745m bound
     set_core_symmetric_y_bound(core_obj.data, 0.51745)
@@ -910,7 +998,9 @@ def bake_animation_and_export(scene, objects_by_name, colorway="blackout"):
     )
     print(f"[OK] Exported {glb_exploded}")
 
-    package_usdz_from_usdc(usdc_path, usdz_path, colorway, include_internal_textures=True)
+    package_usdz_from_usdc(
+        usdc_path, usdz_path, colorway, is_exploded=True, include_internal_textures=True
+    )
     # Restore tight core bound after export
     set_core_symmetric_y_bound(core_obj.data, 0.20745)
 
@@ -998,44 +1088,7 @@ def render_all_views(scene, objects_by_name, colorway="blackout"):
     bpy.ops.render.render(write_still=True)
     print(f"[OK] Rendered Cycles full exploded assembly view: {p_twinnie_fins}")
 
-    # 4. 4K (3840x2160) Photorealistic Studio Hero — Architectural Warm Alabaster Cyclorama with Raytraced Drop Shadows
-    enable_cycles_metal_raytracing(scene, samples=96)
-    scene.render.film_transparent = False
-    scene.render.image_settings.color_mode = "RGB"
-    scene.render.resolution_x = 3840
-    scene.render.resolution_y = 2160
-    set_assembly_state(objects_by_name, mode="twinnie", include_fins=True)
-    backdrop = create_studio_backdrop_plane(color=(0.965, 0.960, 0.948, 1.0), roughness=0.90)
-    cam_data.lens = 45.0
-    cam_loc_hero = Vector((2.95, -1.40, -1.86))
-    cam_tgt_hero = Vector((0.0, 0.03, -0.09))
-    aim_camera(cam_obj, loc=cam_loc_hero, target=cam_tgt_hero, up_vec=(0.0, -0.96, 0.28))
-    view_dir = (cam_tgt_hero - cam_loc_hero).normalized()
-    backdrop.location = cam_tgt_hero + view_dir * 1.25
-    backdrop.rotation_euler = (-view_dir).to_track_quat("Z", "Y").to_euler()
-
-    p_hero_studio = os.path.join(RENDERS_DIR, f"jam_{colorway}_exploded_hero_4k.png")
-    scene.render.filepath = p_hero_studio
-    bpy.ops.render.render(write_still=True)
-    print(f"[OK] Rendered 4K Photorealistic Studio Exploded Hero: {p_hero_studio}")
-
-    # 5. 4K (3840x2160) Photorealistic Editorial Hero — Dramatic Close-Up 3/4 Perspective on Warm Bone Gallery Surface
-    cam_data.lens = 54.0
-    cam_loc_ed = Vector((2.38, -1.18, -1.42))
-    cam_tgt_ed = Vector((-0.02, -0.02, 0.04))
-    aim_camera(cam_obj, loc=cam_loc_ed, target=cam_tgt_ed, up_vec=(0.0, -0.96, 0.28))
-    view_dir_ed = (cam_tgt_ed - cam_loc_ed).normalized()
-    backdrop.location = cam_tgt_ed + view_dir_ed * 1.15
-    backdrop.rotation_euler = (-view_dir_ed).to_track_quat("Z", "Y").to_euler()
-
-    p_hero_editorial = os.path.join(RENDERS_DIR, f"jam_{colorway}_exploded_editorial_4k.png")
-    scene.render.filepath = p_hero_editorial
-    bpy.ops.render.render(write_still=True)
-    print(f"[OK] Rendered 4K Photorealistic Editorial Exploded Hero: {p_hero_editorial}")
-
-    bpy.data.objects.remove(backdrop, do_unlink=True)
-
-    # 6. Bottom Thruster Hull View (matching PVW_2601_1400x.jpg.webp) — only needed once
+    # 4. Bottom Thruster Hull View (matching PVW_2601_1400x.jpg.webp) — only needed once
     if colorway == "blackout":
         set_assembly_state(objects_by_name, mode="assembled", include_fins=True)
         scene.render.film_transparent = True
@@ -1049,7 +1102,7 @@ def render_all_views(scene, objects_by_name, colorway="blackout"):
         bpy.ops.render.render(write_still=True)
         print(f"[OK] Rendered Cycles bottom thruster hull view: {p_hull}")
 
-    # 7. Render 96-frame (4.00s @ 24fps, 1920x1080) Twinnie-Style Exploded Animation MP4 Video
+    # 5. Render 96-frame (4.00s @ 24fps, 1920x1080) Twinnie-Style Dual-Stringer Exploded Animation MP4 Video
     render_twinnie_exploded_video(scene, cam_obj, cam_data, objects_by_name, colorway)
 
 
@@ -1064,7 +1117,7 @@ def render_twinnie_exploded_video(scene, cam_obj, cam_data, objects_by_name, col
     matching Twinnie_Exploded_Animation_Upscaled.mp4.
     """
     cap = "Blackout" if colorway == "blackout" else "Yellow"
-    frames_dir = f"/tmp/jam_anim_{colorway}"
+    frames_dir = f"/Volumes/CodexWork/AI-Work/outputs/formula-fun/gemini/jam_anim_{colorway}"
     os.makedirs(frames_dir, exist_ok=True)
 
     scene.render.engine = "BLENDER_EEVEE"
@@ -1130,10 +1183,12 @@ def render_twinnie_exploded_video(scene, cam_obj, cam_data, objects_by_name, col
 
 
 def main():
+    skip_renders = os.environ.get("SKIP_RENDERS", "0") == "1"
     for cw in ["blackout", "yellow"]:
         print(f"\n=== BUILDING 6'0\" JAM SURFBOARD ({cw.upper()}) ===")
         scene, objects_by_name, mats = build_scene_for_colorway(cw)
-        render_all_views(scene, objects_by_name, cw)
+        if not skip_renders:
+            render_all_views(scene, objects_by_name, cw)
         bake_animation_and_export(scene, objects_by_name, cw)
 
 
