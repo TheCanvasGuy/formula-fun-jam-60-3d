@@ -433,19 +433,23 @@ def assign_uvs_in_sw_space(mesh, role):
         x_min, x_max = 0.0519, 1.7680
         y_min, y_max = -0.2042, 0.2042
         for poly in mesh.polygons:
-            if abs(poly.normal.z) > 0.35:
+            if poly.normal.z > 0.35:
                 for loop_idx in poly.loop_indices:
                     v_co = mesh.vertices[mesh.loops[loop_idx].vertex_index].co
                     u = (v_co.y - y_min) / (y_max - y_min)
                     v = (v_co.x - x_min) / (x_max - x_min)
                     uv_layer.data[loop_idx].uv = (max(0.002, min(0.998, u)), max(0.002, min(0.998, v)))
             else:
-                # Non-degenerate solid-border UVs on perimeter bevel wall (prevents 0/0 NaN tangent fireflies in Cycles)
+                # Continuous wrap-free UVs in the clean lower EVA region (v in [0.02, 0.46])
+                # so underside backing & perimeter walls have smooth tangents and zero seam/logo artifacts
                 for loop_idx in poly.loop_indices:
                     v_co = mesh.vertices[mesh.loops[loop_idx].vertex_index].co
-                    u_edge = 0.015 + 0.020 * ((v_co.x * 2.5 + v_co.y * 2.5) % 1.0)
-                    v_edge = 0.140 + 0.025 * ((v_co.z * 18.0) % 1.0)
-                    uv_layer.data[loop_idx].uv = (u_edge, v_edge)
+                    u_back = 0.04 + 0.92 * ((v_co.y - y_min) / (y_max - y_min))
+                    v_back = 0.03 + 0.40 * ((v_co.x - x_min) / (x_max - x_min)) + 0.15 * v_co.z
+                    uv_layer.data[loop_idx].uv = (
+                        max(0.01, min(0.99, u_back)),
+                        max(0.01, min(0.46, v_back)),
+                    )
     elif role in ("core", "pocket"):
         scale = 3.2
         for poly in mesh.polygons:
@@ -459,18 +463,18 @@ def assign_uvs_in_sw_space(mesh, role):
                     uv = (co.x * scale, co.z * scale)
                 else:
                     uv = (co.y * scale, co.z * scale)
-                uv_layer.data[loop_idx].uv = (uv[0] % 1.0, uv[1] % 1.0)
+                uv_layer.data[loop_idx].uv = uv
     else:
-        # Triplanar lengthwise wood/polymer UVs so end-caps also have valid non-degenerate UVs
+        # Triplanar lengthwise wood/polymer UVs (continuous for hardware repeat tiling)
         for poly in mesh.polygons:
             n = poly.normal
             ax, ay, az = abs(n.x), abs(n.y), abs(n.z)
             for loop_idx in poly.loop_indices:
                 co = mesh.vertices[mesh.loops[loop_idx].vertex_index].co
                 if ax > 0.75:
-                    uv_layer.data[loop_idx].uv = ((co.y * 6.0) % 1.0, (co.z * 6.0) % 1.0)
+                    uv_layer.data[loop_idx].uv = (co.y * 6.0, co.z * 6.0)
                 else:
-                    uv_layer.data[loop_idx].uv = ((co.x * 0.6) % 1.0, ((co.y + co.z) * 4.0) % 1.0)
+                    uv_layer.data[loop_idx].uv = (co.x * 0.6, (co.y + co.z) * 4.0)
 
 
 def create_deck_plugs_and_handle_recess(mats, bvh_core):
@@ -528,7 +532,11 @@ def create_deck_plugs_and_handle_recess(mats, bvh_core):
     bm.free()
 
     assign_uvs_in_sw_space(mesh, "finbox")
-    mesh.transform(sw_to_standing_matrix())
+    M_hw = sw_to_standing_matrix()
+    mesh.transform(M_hw)
+    if M_hw.determinant() < 0.0:
+        mesh.flip_normals()
+        mesh.update()
 
     obj = bpy.data.objects.new("Jam_Deck_Hardware", mesh)
     bpy.context.scene.collection.objects.link(obj)
@@ -585,6 +593,13 @@ def build_scene_for_colorway(colorway="blackout"):
 
         # Transform from SW assembly space to Standing Upright space (X=Width, Y=Thickness, Z=Length)
         mesh.transform(M_stand)
+        # CRITICAL: Because det(M_stand) == -1.0, mesh.transform(M_stand) inverts triangle winding!
+        # Apple RealityKit / Quick Look strictly backface-culls UsdPreviewSurface meshes (ignoring doubleSided=True),
+        # which caused the entire outer bottom hull of Jam_60_Core to be culled when viewing from underneath.
+        # Flipping face winding whenever det(M_sw * M_stand) < 0 restores true outward right-handed normals (+signedVol)!
+        if (M_sw.determinant() * M_stand.determinant()) < 0.0:
+            mesh.flip_normals()
+            mesh.update()
 
         # For Jam_60_Core, add two microscopic 1-micron degenerate triangles at symmetric Y_bl bounds
         # (-0.20745m and +0.20745m) so the union bounding box (extent) of the entire surfboard in
