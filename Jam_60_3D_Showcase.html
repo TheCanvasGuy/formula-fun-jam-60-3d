@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Formula Fun 6'0" Jam — Dual-Stringer 3D, Exploded CAD &amp; iPhone AR Review</title>
-  <script type="module" src="model-viewer.min.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three.module.min.js"
+      }
+    }
+  </script>
   <style>
     /* Formula Fun Canonical Design System Tokens (Release 1.0.1) */
     :root {
@@ -220,6 +226,96 @@
       flex-direction: column;
     }
 
+    .stage-card.is-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      width: 100vw;
+      height: 100dvh;
+      border-radius: 0;
+      border: none;
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
+      background-color: var(--ff-surf-white);
+    }
+
+    .stage-card.is-fullscreen .webgl-stage {
+      flex: 1;
+      height: auto !important;
+      min-height: 0;
+    }
+
+    .webgl-stage {
+      position: relative;
+      width: 100%;
+      height: 560px;
+      background-color: var(--ff-surf-white);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: grab;
+      overflow: hidden;
+    }
+
+    .webgl-stage:active {
+      cursor: grabbing;
+    }
+
+    .webgl-stage.move-cursor {
+      cursor: move;
+    }
+
+    .webgl-stage canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+      outline: none;
+    }
+
+    .stage-hud {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      pointer-events: none;
+      flex-wrap: wrap;
+    }
+
+    .hud-chip {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ff-muted);
+      background-color: rgba(255, 252, 247, 0.90);
+      border: 1px solid var(--ff-border);
+      border-radius: var(--ff-radius-pill);
+      padding: 4px 10px;
+    }
+
+    .stage-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 252, 247, 0.76);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ff-ink);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.16s ease;
+    }
+
+    .stage-loader.visible {
+      opacity: 1;
+    }
+
     .stage-toolbar {
       padding: 12px 16px;
       background-color: var(--ff-cream);
@@ -259,12 +355,7 @@
       flex-wrap: wrap;
     }
 
-    model-viewer {
-      width: 100%;
-      height: 560px;
-      background-color: var(--ff-surf-white);
-      --poster-color: transparent;
-    }
+    /* WebGL Canvas Stage sizing handled by .webgl-stage */
 
     .stage-footer {
       padding: 12px 16px;
@@ -573,7 +664,7 @@
       .calib-grid {
         grid-template-columns: 1fr;
       }
-      model-viewer {
+      .webgl-stage {
         height: 460px;
       }
     }
@@ -586,14 +677,42 @@
         display: none;
       }
       main {
-        padding: 12px 14px calc(32px + var(--safe-bottom));
-        gap: 20px;
+        padding: 10px 12px calc(32px + var(--safe-bottom));
+        gap: 16px;
+      }
+      .intro-bar h1 {
+        font-size: 20px;
       }
       .intro-bar p {
-        font-size: 13px;
+        font-size: 12.5px;
       }
-      model-viewer {
-        height: 440px;
+      .stage-toolbar {
+        padding: 8px 10px;
+        gap: 6px;
+      }
+      .preset-bar {
+        padding: 6px 10px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .preset-bar::-webkit-scrollbar {
+        display: none;
+      }
+      .preset-bar .control-group {
+        flex-wrap: nowrap;
+        flex-shrink: 0;
+      }
+      .btn-pill {
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+      .webgl-stage {
+        height: 400px;
+      }
+      .stage-hud .hud-chip:first-child {
+        display: none;
       }
       .gallery-grid,
       .ar-grid,
@@ -632,59 +751,51 @@
 
     <!-- 1. Above-the-Fold Interactive 3D Stage + AR Quick Look & BOM -->
     <section class="cockpit-grid">
-      <div class="stage-card">
+      <div class="stage-card" id="stageCard">
         <div class="stage-toolbar">
           <div class="control-group" role="group" aria-label="Colorway">
             <span class="group-label">Color</span>
-            <button type="button" id="btnColorBlackout" class="btn-pill active-tab" onclick="setColorway('blackout')">Blackout</button>
-            <button type="button" id="btnColorYellow" class="btn-pill" onclick="setColorway('yellow')">Mellow Yellow</button>
+            <button type="button" id="btnColorBlackout" class="btn-pill active-tab" onclick="window.jam3D.setColorway('blackout')">Blackout</button>
+            <button type="button" id="btnColorYellow" class="btn-pill" onclick="window.jam3D.setColorway('yellow')">Mellow Yellow</button>
           </div>
           <div class="control-group" role="group" aria-label="Assembly State">
             <span class="group-label">State</span>
-            <button type="button" id="btnModeExploded" class="btn-pill active-tab" onclick="setAssemblyMode('exploded')">Exploded</button>
-            <button type="button" id="btnModeAssembled" class="btn-pill" onclick="setAssemblyMode('assembled')">Assembled</button>
+            <button type="button" id="btnModeExploded" class="btn-pill active-tab" onclick="window.jam3D.setAssemblyMode('exploded')">Exploded</button>
+            <button type="button" id="btnModeAssembled" class="btn-pill" onclick="window.jam3D.setAssemblyMode('assembled')">Assembled</button>
+          </div>
+          <div class="control-group" role="group" aria-label="Drag Interaction Mode">
+            <span class="group-label">Drag</span>
+            <button type="button" id="btnDragRotate" class="btn-pill active-tab" onclick="window.jam3D.setDragMode('rotate')">Rotate 360°</button>
+            <button type="button" id="btnDragMove" class="btn-pill" onclick="window.jam3D.setDragMode('move')">Move Space</button>
           </div>
         </div>
 
         <div class="preset-bar">
-          <div class="control-group" role="group" aria-label="Camera Views">
-            <button type="button" class="btn-pill" onclick="setCameraAngle('twinnie')">3/4 Iso</button>
-            <button type="button" class="btn-pill" onclick="setCameraAngle('deck')">Deck</button>
-            <button type="button" class="btn-pill" onclick="setCameraAngle('hull')">Hull &amp; Fins</button>
-            <button type="button" class="btn-pill" onclick="setCameraAngle('rocker')">Rocker</button>
+          <div class="control-group" role="group" aria-label="Orientation Presets">
+            <button type="button" class="btn-pill" onclick="window.jam3D.setPreset('twinnie')">3/4 Iso</button>
+            <button type="button" class="btn-pill" onclick="window.jam3D.setPreset('deck')">Deck</button>
+            <button type="button" class="btn-pill" onclick="window.jam3D.setPreset('hull')">Hull &amp; Fins</button>
+            <button type="button" class="btn-pill" onclick="window.jam3D.setPreset('rocker')">Rocker</button>
+            <button type="button" class="btn-pill" onclick="window.jam3D.setPreset('horizontal')">Horizontal</button>
           </div>
           <div class="control-group">
-            <button type="button" class="btn-pill" onclick="toggleAxisDrawer()" id="btnAxisToggle">360° Axes</button>
-            <button type="button" class="btn-pill primary" onclick="resetCenterPivot()">Reset (0,0,0)</button>
+            <button type="button" id="btnAutoSpin" class="btn-pill" onclick="window.jam3D.toggleAutoSpin()">Auto-Spin</button>
+            <button type="button" class="btn-pill primary" onclick="window.jam3D.resetCenterPivot()">Reset (0,0,0)</button>
+            <button type="button" id="btnFullScreen" class="btn-pill dark" onclick="window.jam3D.toggleFullScreen()">Full Screen 3D</button>
           </div>
         </div>
 
-        <model-viewer
-          id="jamViewer"
-          src="Jam_60_Blackout_Exploded.glb?v=20261111c"
-          ios-src="Jam_60_Blackout_Exploded.usdz?v=20261111c"
-          alt="Formula Fun 6'0 Jam Dual-Stringer 3D Surfboard Assembly"
-          ar
-          ar-modes="quick-look webxr scene-viewer"
-          camera-controls
-          touch-action="none"
-          autoplay
-          animation-name="ExplodedLoop"
-          camera-target="0m 0m 0m"
-          camera-orbit="-36deg 78deg 4.35m"
-          min-camera-orbit="-Infinity 0deg 0.4m"
-          max-camera-orbit="Infinity 180deg 12.0m"
-          field-of-view="30deg"
-          min-field-of-view="8deg"
-          max-field-of-view="75deg"
-          interpolation-decay="110"
-          shadow-intensity="0"
-          exposure="0.96">
-        </model-viewer>
+        <div class="webgl-stage" id="webglStage" role="application" aria-label="Infinite 360-degree 3D Surfboard Free-Space Stage">
+          <div class="stage-loader visible" id="stageLoader">LOADING 3D CAD ASSEMBLY...</div>
+          <div class="stage-hud">
+            <span class="hud-chip">1-Finger/Left-Drag: Infinite 360° Tumble · 2-Finger/Right-Drag: Move &amp; Twist</span>
+            <span class="hud-chip" id="telemetryChip">SPIN 0° · POS (0.00, 0.00)m · ZOOM 1.00×</span>
+          </div>
+        </div>
 
         <div class="stage-footer">
           <div class="scrub-row">
-            <button type="button" id="btnPlayPause" class="btn-pill dark" onclick="togglePlayPause()">
+            <button type="button" id="btnPlayPause" class="btn-pill dark" onclick="window.jam3D.togglePlayPause()">
               <span id="playPauseLabel">Pause Loop</span>
             </button>
             <input
@@ -695,33 +806,20 @@
               max="100"
               value="100"
               aria-label="Exploded View Scrub Percentage"
-              oninput="scrubExploded(this.value)">
+              oninput="window.jam3D.scrubExploded(this.value)">
             <div id="scrubReadout" class="scrub-readout">AUTO LOOP · (0,0,0)</div>
-          </div>
-
-          <div id="axisDrawer" class="axis-drawer">
-            <label class="axis-label">
-              <span>Pitch</span>
-              <input type="range" id="pitchSlider" class="scrub-slider" min="-180" max="180" value="0" oninput="updateModelOrientation()" aria-label="Pitch Degrees">
-            </label>
-            <label class="axis-label">
-              <span>Roll</span>
-              <input type="range" id="rollSlider" class="scrub-slider" min="-180" max="180" value="0" oninput="updateModelOrientation()" aria-label="Roll Degrees">
-            </label>
-            <label class="axis-label">
-              <span>Yaw</span>
-              <input type="range" id="yawSlider" class="scrub-slider" min="-180" max="180" value="0" oninput="updateModelOrientation()" aria-label="Yaw Degrees">
-            </label>
-            <div id="orientReadout" class="scrub-readout">P:0° R:0° Y:0°</div>
           </div>
         </div>
       </div>
 
-      <!-- Right Column: iOS AR Quick Look Cards + GLB Downloads + Dual-Stringer BOM -->
+      <!-- Right Column: Full-Screen Free-Space + iOS AR Quick Look Cards + GLB Downloads + Dual-Stringer BOM -->
       <div class="side-stack">
         <div class="panel-card">
-          <h2>iPhone AR Quick Look &amp; Model Files</h2>
-          <p class="sub">Tap any card on iPhone to open native Quick Look with mid-section <code>(0,0,0)</code> anchor and full 360° rotation.</p>
+          <h2>Free-Space 3D &amp; iPhone AR Quick Look</h2>
+          <p class="sub">Use <strong>Full Screen 3D</strong> for unrestricted infinite 360°×360°×360° tumbling and free movement in space on iPhone &amp; Mac. Use the <code>.USDZ</code> cards below for iOS camera AR placement.</p>
+          <div style="margin-bottom: 12px; display: flex;">
+            <button type="button" class="btn-pill primary" style="width: 100%;" onclick="window.jam3D.toggleFullScreen(true)">Open Full-Screen Infinite 3D Space</button>
+          </div>
 
           <div class="ar-grid">
             <a rel="ar" href="Jam_60_Blackout_Assembled.usdz?v=20261111c" class="ar-launch-card">
@@ -1070,139 +1168,6 @@
   </main>
 
   <script>
-    const viewer = document.getElementById('jamViewer');
-    const playPauseLabel = document.getElementById('playPauseLabel');
-    const scrubReadout = document.getElementById('scrubReadout');
-    const explodeSlider = document.getElementById('explodeSlider');
-    const pitchSlider = document.getElementById('pitchSlider');
-    const rollSlider = document.getElementById('rollSlider');
-    const yawSlider = document.getElementById('yawSlider');
-    const orientReadout = document.getElementById('orientReadout');
-    const axisDrawer = document.getElementById('axisDrawer');
-    const btnAxisToggle = document.getElementById('btnAxisToggle');
-
-    let currentColorway = 'blackout';
-    let currentMode = 'exploded';
-    let isPlaying = true;
-    const CACHE_VER = 'v=20261111c';
-
-    viewer.addEventListener('load', () => {
-      viewer.cameraTarget = '0m 0m 0m';
-      viewer.minCameraOrbit = '-Infinity 0deg 0.4m';
-      viewer.maxCameraOrbit = 'Infinity 180deg 12.0m';
-    });
-
-    function updateModelSource() {
-      const cap = currentColorway === 'blackout' ? 'Blackout' : 'Yellow';
-      const stateCap = currentMode === 'exploded' ? 'Exploded' : 'Assembled';
-      viewer.src = `Jam_60_${cap}_${stateCap}.glb?${CACHE_VER}`;
-      viewer.iosSrc = `Jam_60_${cap}_${stateCap}.usdz?${CACHE_VER}`;
-      viewer.cameraTarget = '0m 0m 0m';
-
-      if (currentMode === 'exploded') {
-        viewer.setAttribute('autoplay', '');
-        isPlaying = true;
-        playPauseLabel.textContent = 'Pause Loop';
-        scrubReadout.textContent = 'AUTO LOOP · (0,0,0)';
-        explodeSlider.value = 100;
-      } else {
-        viewer.removeAttribute('autoplay');
-        isPlaying = false;
-        playPauseLabel.textContent = 'Static Mode';
-        scrubReadout.textContent = 'ASSEMBLED · (0,0,0)';
-        explodeSlider.value = 0;
-      }
-    }
-
-    function setColorway(color) {
-      currentColorway = color;
-      document.getElementById('btnColorBlackout').classList.toggle('active-tab', color === 'blackout');
-      document.getElementById('btnColorYellow').classList.toggle('active-tab', color === 'yellow');
-      updateModelSource();
-    }
-
-    function setAssemblyMode(mode) {
-      currentMode = mode;
-      document.getElementById('btnModeExploded').classList.toggle('active-tab', mode === 'exploded');
-      document.getElementById('btnModeAssembled').classList.toggle('active-tab', mode === 'assembled');
-      updateModelSource();
-    }
-
-    function toggleAxisDrawer() {
-      const open = axisDrawer.classList.toggle('open');
-      btnAxisToggle.classList.toggle('active-tab', open);
-    }
-
-    function updateModelOrientation() {
-      const pitch = parseFloat(pitchSlider.value) || 0;
-      const roll = parseFloat(rollSlider.value) || 0;
-      const yaw = parseFloat(yawSlider.value) || 0;
-      viewer.orientation = `${roll}deg ${pitch}deg ${yaw}deg`;
-      viewer.cameraTarget = '0m 0m 0m';
-      orientReadout.textContent = `P:${pitch}° R:${roll}° Y:${yaw}°`;
-    }
-
-    function resetCenterPivot() {
-      pitchSlider.value = 0;
-      rollSlider.value = 0;
-      yawSlider.value = 0;
-      viewer.orientation = '0deg 0deg 0deg';
-      viewer.cameraTarget = '0m 0m 0m';
-      viewer.cameraOrbit = '-36deg 78deg 4.35m';
-      viewer.fieldOfView = '30deg';
-      orientReadout.textContent = 'P:0° R:0° Y:0°';
-    }
-
-    function setCameraAngle(preset) {
-      viewer.cameraTarget = '0m 0m 0m';
-      if (preset === 'twinnie') {
-        viewer.cameraOrbit = '-36deg 78deg 4.35m';
-        viewer.fieldOfView = '30deg';
-      } else if (preset === 'deck') {
-        viewer.cameraOrbit = '0deg 90deg 3.85m';
-        viewer.fieldOfView = '28deg';
-      } else if (preset === 'hull') {
-        viewer.cameraOrbit = '180deg 90deg 3.85m';
-        viewer.fieldOfView = '28deg';
-      } else if (preset === 'tail') {
-        viewer.cameraOrbit = '160deg 145deg 2.25m';
-        viewer.fieldOfView = '26deg';
-      } else if (preset === 'rocker') {
-        viewer.cameraOrbit = '-90deg 90deg 3.85m';
-        viewer.fieldOfView = '26deg';
-      }
-    }
-
-    function togglePlayPause() {
-      if (currentMode !== 'exploded') {
-        setAssemblyMode('exploded');
-        return;
-      }
-      if (isPlaying) {
-        viewer.pause();
-        isPlaying = false;
-        playPauseLabel.textContent = 'Play Loop';
-        scrubReadout.textContent = 'PAUSED · (0,0,0)';
-      } else {
-        viewer.play();
-        isPlaying = true;
-        playPauseLabel.textContent = 'Pause Loop';
-        scrubReadout.textContent = 'AUTO LOOP · (0,0,0)';
-      }
-    }
-
-    function scrubExploded(pct) {
-      if (currentMode !== 'exploded') {
-        setAssemblyMode('exploded');
-      }
-      viewer.pause();
-      isPlaying = false;
-      playPauseLabel.textContent = 'Play Loop';
-      const t = 4.17 - (parseFloat(pct) / 100.0) * (4.17 - 1.46);
-      viewer.currentTime = t;
-      scrubReadout.textContent = `EXPLODE: ${pct}%`;
-    }
-
     function filterGallery(cw) {
       document.getElementById('fltAll').classList.toggle('active-tab', cw === 'all');
       document.getElementById('fltBlackout').classList.toggle('active-tab', cw === 'blackout');
@@ -1212,6 +1177,534 @@
         card.classList.toggle('hidden-by-filter', !match);
       });
     }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from './vendor/jsm/loaders/GLTFLoader.js';
+    import { RoomEnvironment } from './vendor/jsm/environments/RoomEnvironment.js';
+
+    const CACHE_VER = 'v=20261112a';
+    const DEFAULT_DIST = 4.85;
+
+    const stageCard = document.getElementById('stageCard');
+    const stageEl = document.getElementById('webglStage');
+    const loaderEl = document.getElementById('stageLoader');
+    const telemetryChip = document.getElementById('telemetryChip');
+    const playPauseLabel = document.getElementById('playPauseLabel');
+    const scrubReadout = document.getElementById('scrubReadout');
+    const explodeSlider = document.getElementById('explodeSlider');
+    const btnFullScreen = document.getElementById('btnFullScreen');
+    const btnAutoSpin = document.getElementById('btnAutoSpin');
+
+    // Three.js Zero-Limit 6-DOF Scene Setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xFFFCF7);
+
+    const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 250);
+    let camDistance = DEFAULT_DIST;
+    camera.position.set(0, 0, camDistance);
+    scene.add(camera);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.NeutralToneMapping;
+    renderer.toneMappingExposure = 1.06;
+    stageEl.insertBefore(renderer.domElement, stageEl.firstChild);
+
+    // Studio IBL Environment + View-Locked 3-Point Softbox Rig (so every 360-degree side stays evenly lit)
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.88;
+    pmrem.dispose();
+
+    const hemiLight = new THREE.HemisphereLight(0xFFFFFF, 0xEDE5D5, 0.72);
+    scene.add(hemiLight);
+
+    const keyLight = new THREE.DirectionalLight(0xFFFCF6, 1.38);
+    keyLight.position.set(2.4, 3.1, 4.2);
+    camera.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0xF3F7FF, 0.82);
+    fillLight.position.set(-2.8, -1.4, 3.4);
+    camera.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xFFFDF8, 0.55);
+    rimLight.position.set(0.0, 3.6, -2.5);
+    camera.add(rimLight);
+
+    // Mid-Section (0,0,0) Unclamped Quaternion Pivot Group
+    const boardPivot = new THREE.Group();
+    scene.add(boardPivot);
+
+    const DEFAULT_QUAT = new THREE.Quaternion().setFromEuler(new THREE.Euler(0.16, -0.62, 0.0, 'YXZ'));
+    boardPivot.quaternion.copy(DEFAULT_QUAT);
+
+    // State
+    let currentColorway = 'blackout';
+    let currentMode = 'exploded';
+    let dragMode = 'rotate'; // 'rotate' | 'move'
+    let isPlaying = true;
+    let autoSpin = false;
+    let cumulativeDegrees = 0;
+
+    // Smooth preset slerp target (null when free-dragging)
+    let targetQuat = null;
+    let targetPos = null;
+    let targetDist = null;
+
+    // Inertial angular velocity (screen-space radians/sec)
+    let velX = 0;
+    let velY = 0;
+    let velRoll = 0;
+
+    // Cached GLB entries: key -> { root, mixer, action }
+    const modelCache = new Map();
+    const gltfLoader = new GLTFLoader();
+    const maxAniso = renderer.capabilities.getMaxAnisotropy();
+    let activeEntry = null;
+    let loadToken = 0;
+
+    async function loadActiveModel() {
+      const cap = currentColorway === 'blackout' ? 'Blackout' : 'Yellow';
+      const stateCap = currentMode === 'exploded' ? 'Exploded' : 'Assembled';
+      const key = `${cap}_${stateCap}`;
+      const myToken = ++loadToken;
+
+      if (modelCache.has(key)) {
+        attachEntry(modelCache.get(key));
+        return;
+      }
+
+      loaderEl.classList.add('visible');
+      const url = `Jam_60_${cap}_${stateCap}.glb?${CACHE_VER}`;
+      gltfLoader.load(
+        url,
+        (gltf) => {
+          gltf.scene.traverse((node) => {
+            if (node.isMesh) {
+              node.frustumCulled = false;
+              const mats = Array.isArray(node.material) ? node.material : [node.material];
+              mats.forEach((m) => {
+                if (!m) return;
+                m.envMapIntensity = 0.88;
+                ['map', 'normalMap', 'roughnessMap'].forEach((tKey) => {
+                  if (m[tKey]) {
+                    m[tKey].anisotropy = maxAniso;
+                  }
+                });
+              });
+            }
+          });
+
+          let mixer = null;
+          let action = null;
+          if (gltf.animations && gltf.animations.length > 0) {
+            mixer = new THREE.AnimationMixer(gltf.scene);
+            action = mixer.clipAction(gltf.animations[0]);
+            action.play();
+          }
+
+          const entry = { key, root: gltf.scene, mixer, action };
+          modelCache.set(key, entry);
+          if (myToken === loadToken) {
+            attachEntry(entry);
+            loaderEl.classList.remove('visible');
+          }
+        },
+        undefined,
+        (err) => {
+          console.error('GLB load error:', err);
+          loaderEl.textContent = '3D LOAD ERROR — RETRYING...';
+        }
+      );
+    }
+
+    function attachEntry(entry) {
+      while (boardPivot.children.length > 0) {
+        boardPivot.remove(boardPivot.children[0]);
+      }
+      boardPivot.add(entry.root);
+      activeEntry = entry;
+      loaderEl.classList.remove('visible');
+
+      if (currentMode === 'exploded') {
+        isPlaying = true;
+        playPauseLabel.textContent = 'Pause Loop';
+        scrubReadout.textContent = 'AUTO LOOP · (0,0,0)';
+        explodeSlider.value = 100;
+        if (entry.action) {
+          entry.action.paused = false;
+        }
+      } else {
+        isPlaying = false;
+        playPauseLabel.textContent = 'Static Mode';
+        scrubReadout.textContent = 'ASSEMBLED · (0,0,0)';
+        explodeSlider.value = 0;
+      }
+    }
+
+    // Resize Handling
+    function resizeStage() {
+      const rect = stageEl.getBoundingClientRect();
+      const w = Math.max(1, rect.width);
+      const h = Math.max(1, rect.height);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    }
+    new ResizeObserver(resizeStage).observe(stageEl);
+    window.addEventListener('resize', resizeStage);
+    resizeStage();
+
+    // Pure SO(3) Screen-Space Quaternion Rotation Helper (Zero Gimbal Lock, Zero Polar Clamp)
+    const tmpAxis = new THREE.Vector3();
+    const tmpQuat = new THREE.Quaternion();
+    const zAxis = new THREE.Vector3(0, 0, 1);
+
+    function applyScreenTumble(dxPx, dyPx, rectMin) {
+      const distPx = Math.hypot(dxPx, dyPx);
+      if (distPx < 1e-5) return;
+      const radPerPx = 3.6 / Math.max(240, rectMin);
+      const angle = distPx * radPerPx;
+      // dx > 0 -> +Y world spin; dy > 0 -> +X world pitch (exact finger-following orientation from any angle!)
+      tmpAxis.set(dyPx, dxPx, 0).normalize();
+      tmpQuat.setFromAxisAngle(tmpAxis, angle);
+      boardPivot.quaternion.premultiply(tmpQuat).normalize();
+      cumulativeDegrees += THREE.MathUtils.radToDeg(angle);
+    }
+
+    function applyScreenRoll(dAngleRad) {
+      if (Math.abs(dAngleRad) < 1e-6) return;
+      tmpQuat.setFromAxisAngle(zAxis, -dAngleRad);
+      boardPivot.quaternion.premultiply(tmpQuat).normalize();
+      cumulativeDegrees += Math.abs(THREE.MathUtils.radToDeg(dAngleRad));
+    }
+
+    function applyScreenPan(dxPx, dyPx, viewHeight) {
+      const worldPerPx = (2 * camDistance * Math.tan(THREE.MathUtils.degToRad(camera.fov * 0.5))) / Math.max(1, viewHeight);
+      boardPivot.position.x += dxPx * worldPerPx;
+      boardPivot.position.y -= dyPx * worldPerPx;
+    }
+
+    // Multi-Pointer Gesture Engine (1-Finger Infinite Tumble + 2-Finger Simultaneous Move, Pinch-Zoom & Twist-Roll)
+    const pointers = new Map();
+    let prevSingle = null;
+    let prevDual = null;
+    let lastMoveTs = performance.now();
+
+    stageEl.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    stageEl.addEventListener('pointerdown', (e) => {
+      stageEl.setPointerCapture(e.pointerId);
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, button: e.button });
+      targetQuat = null;
+      targetPos = null;
+      targetDist = null;
+      velX = 0;
+      velY = 0;
+      velRoll = 0;
+      syncGestureBaseline();
+    });
+
+    stageEl.addEventListener('pointermove', (e) => {
+      if (!pointers.has(e.pointerId)) return;
+      const prevRec = pointers.get(e.pointerId);
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, button: prevRec.button });
+
+      const rect = stageEl.getBoundingClientRect();
+      const rectMin = Math.min(rect.width, rect.height);
+      const now = performance.now();
+      const dt = Math.max(0.004, (now - lastMoveTs) / 1000);
+      lastMoveTs = now;
+
+      if (pointers.size === 1 && prevSingle) {
+        const p = pointers.values().next().value;
+        const dx = p.x - prevSingle.x;
+        const dy = p.y - prevSingle.y;
+        prevSingle = { x: p.x, y: p.y };
+
+        const isPanGesture = dragMode === 'move' || p.button === 1 || p.button === 2 || e.shiftKey;
+        const isRollGesture = e.altKey;
+
+        if (isPanGesture) {
+          applyScreenPan(dx, dy, rect.height);
+        } else if (isRollGesture) {
+          const dRoll = (dx * 3.2) / Math.max(240, rectMin);
+          applyScreenRoll(dRoll);
+          velRoll = 0.7 * velRoll + 0.3 * (dRoll / dt);
+        } else {
+          applyScreenTumble(dx, dy, rectMin);
+          velX = 0.65 * velX + 0.35 * (dx / dt);
+          velY = 0.65 * velY + 0.35 * (dy / dt);
+        }
+      } else if (pointers.size >= 2) {
+        const pts = Array.from(pointers.values());
+        const p1 = pts[0];
+        const p2 = pts[1];
+        const midX = 0.5 * (p1.x + p2.x);
+        const midY = 0.5 * (p1.y + p2.y);
+        const span = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+
+        if (prevDual) {
+          // 1. Unclamped 2-finger free-space move
+          applyScreenPan(midX - prevDual.midX, midY - prevDual.midY, rect.height);
+
+          // 2. Simultaneous pinch zoom (0.10m macro to 40m wide)
+          if (span > 8 && prevDual.span > 8) {
+            camDistance = THREE.MathUtils.clamp(camDistance * (prevDual.span / span), 0.10, 40.0);
+          }
+
+          // 3. Simultaneous 2-finger screen-plane twist roll (infinite 360-degree Z-roll)
+          let dAng = angle - prevDual.angle;
+          if (dAng > Math.PI) dAng -= 2 * Math.PI;
+          if (dAng < -Math.PI) dAng += 2 * Math.PI;
+          applyScreenRoll(dAng);
+        }
+        prevDual = { midX, midY, span, angle };
+      }
+    });
+
+    function onPointerEnd(e) {
+      pointers.delete(e.pointerId);
+      syncGestureBaseline();
+    }
+    stageEl.addEventListener('pointerup', onPointerEnd);
+    stageEl.addEventListener('pointercancel', onPointerEnd);
+
+    function syncGestureBaseline() {
+      if (pointers.size === 1) {
+        const p = pointers.values().next().value;
+        prevSingle = { x: p.x, y: p.y };
+        prevDual = null;
+      } else if (pointers.size >= 2) {
+        const pts = Array.from(pointers.values());
+        prevDual = {
+          midX: 0.5 * (pts[0].x + pts[1].x),
+          midY: 0.5 * (pts[0].y + pts[1].y),
+          span: Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y),
+          angle: Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x),
+        };
+        prevSingle = null;
+      } else {
+        prevSingle = null;
+        prevDual = null;
+      }
+    }
+
+    // Mouse Wheel / Trackpad Pinch & Two-Finger Pan
+    stageEl.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        targetDist = null;
+        if (e.shiftKey && !e.ctrlKey) {
+          const rect = stageEl.getBoundingClientRect();
+          applyScreenPan(-e.deltaX, -e.deltaY, rect.height);
+        } else {
+          const zoomFactor = Math.exp(e.deltaY * (e.ctrlKey ? 0.006 : 0.0014));
+          camDistance = THREE.MathUtils.clamp(camDistance * zoomFactor, 0.10, 40.0);
+        }
+      },
+      { passive: false }
+    );
+
+    // Escape exits Full Screen 3D
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && stageCard.classList.contains('is-fullscreen')) {
+        toggleFullScreen(false);
+      }
+    });
+
+    // Public Controls API
+    function setColorway(color) {
+      currentColorway = color;
+      document.getElementById('btnColorBlackout').classList.toggle('active-tab', color === 'blackout');
+      document.getElementById('btnColorYellow').classList.toggle('active-tab', color === 'yellow');
+      loadActiveModel();
+    }
+
+    function setAssemblyMode(mode) {
+      currentMode = mode;
+      document.getElementById('btnModeExploded').classList.toggle('active-tab', mode === 'exploded');
+      document.getElementById('btnModeAssembled').classList.toggle('active-tab', mode === 'assembled');
+      loadActiveModel();
+    }
+
+    function setDragMode(mode) {
+      dragMode = mode;
+      document.getElementById('btnDragRotate').classList.toggle('active-tab', mode === 'rotate');
+      document.getElementById('btnDragMove').classList.toggle('active-tab', mode === 'move');
+      stageEl.classList.toggle('move-cursor', mode === 'move');
+    }
+
+    function toggleAutoSpin() {
+      autoSpin = !autoSpin;
+      btnAutoSpin.classList.toggle('active-tab', autoSpin);
+    }
+
+    function toggleFullScreen(forceState) {
+      const next = typeof forceState === 'boolean' ? forceState : !stageCard.classList.contains('is-fullscreen');
+      stageCard.classList.toggle('is-fullscreen', next);
+      document.body.style.overflow = next ? 'hidden' : '';
+      btnFullScreen.textContent = next ? 'Exit Full Screen' : 'Full Screen 3D';
+      resizeStage();
+    }
+
+    function resetCenterPivot() {
+      velX = 0;
+      velY = 0;
+      velRoll = 0;
+      cumulativeDegrees = 0;
+      targetQuat = DEFAULT_QUAT.clone();
+      targetPos = new THREE.Vector3(0, 0, 0);
+      targetDist = DEFAULT_DIST;
+    }
+
+    function setPreset(name) {
+      velX = 0;
+      velY = 0;
+      velRoll = 0;
+      targetPos = new THREE.Vector3(0, 0, 0);
+      if (name === 'twinnie') {
+        targetQuat = DEFAULT_QUAT.clone();
+        targetDist = DEFAULT_DIST;
+      } else if (name === 'deck') {
+        targetQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, 0, 'YXZ'));
+        targetDist = 4.65;
+      } else if (name === 'hull') {
+        targetQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI, 0, 'YXZ'));
+        targetDist = 4.65;
+      } else if (name === 'rocker') {
+        targetQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -Math.PI * 0.5, 0, 'YXZ'));
+        targetDist = 4.65;
+      } else if (name === 'horizontal') {
+        targetQuat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0.38, -0.32, -Math.PI * 0.5, 'ZXY'));
+        targetDist = 3.85;
+      }
+    }
+
+    function togglePlayPause() {
+      if (currentMode !== 'exploded') {
+        setAssemblyMode('exploded');
+        return;
+      }
+      isPlaying = !isPlaying;
+      if (activeEntry && activeEntry.action) {
+        activeEntry.action.paused = !isPlaying;
+      }
+      playPauseLabel.textContent = isPlaying ? 'Pause Loop' : 'Play Loop';
+      scrubReadout.textContent = isPlaying ? 'AUTO LOOP · (0,0,0)' : 'PAUSED · (0,0,0)';
+    }
+
+    function scrubExploded(pct) {
+      if (currentMode !== 'exploded') {
+        setAssemblyMode('exploded');
+      }
+      isPlaying = false;
+      playPauseLabel.textContent = 'Play Loop';
+      const t = 4.17 - (parseFloat(pct) / 100.0) * (4.17 - 1.46);
+      if (activeEntry && activeEntry.mixer && activeEntry.action) {
+        activeEntry.action.paused = false;
+        activeEntry.mixer.setTime(t);
+        activeEntry.action.paused = true;
+      }
+      scrubReadout.textContent = `EXPLODE: ${pct}%`;
+    }
+
+    window.jam3D = {
+      setColorway,
+      setAssemblyMode,
+      setDragMode,
+      toggleAutoSpin,
+      toggleFullScreen,
+      resetCenterPivot,
+      setPreset,
+      togglePlayPause,
+      scrubExploded,
+      // Diagnostic hook for automated 360-degree & free-space verification
+      getState: () => ({
+        quat: boardPivot.quaternion.toArray(),
+        pos: boardPivot.position.toArray(),
+        camDistance,
+        cumulativeDegrees: Math.round(cumulativeDegrees),
+        loaded: Boolean(activeEntry),
+      }),
+      applyScreenTumble,
+      applyScreenPan,
+    };
+
+    // Render Loop (60/120Hz with Inertial Momentum, Slerp Presets & AnimationMixer)
+    let prevTime = performance.now();
+    function animate(now) {
+      requestAnimationFrame(animate);
+      const dt = Math.min(0.05, Math.max(0.001, (now - prevTime) / 1000));
+      prevTime = now;
+
+      if (activeEntry && activeEntry.mixer && isPlaying) {
+        activeEntry.mixer.update(dt);
+      }
+
+      if (pointers.size === 0) {
+        if (targetQuat) {
+          boardPivot.quaternion.slerp(targetQuat, Math.min(1, dt * 10.0));
+          if (boardPivot.quaternion.angleTo(targetQuat) < 0.002) {
+            boardPivot.quaternion.copy(targetQuat);
+            targetQuat = null;
+          }
+        } else {
+          const rect = stageEl.getBoundingClientRect();
+          const rectMin = Math.min(rect.width, rect.height);
+          if (Math.hypot(velX, velY) > 1.5) {
+            applyScreenTumble(velX * dt, velY * dt, rectMin);
+            const decay = Math.pow(0.04, dt);
+            velX *= decay;
+            velY *= decay;
+          } else {
+            velX = 0;
+            velY = 0;
+          }
+          if (Math.abs(velRoll) > 0.01) {
+            applyScreenRoll(velRoll * dt);
+            velRoll *= Math.pow(0.04, dt);
+          } else {
+            velRoll = 0;
+          }
+          if (autoSpin) {
+            tmpQuat.setFromAxisAngle(new THREE.Vector3(0, 1, 0), dt * 0.85);
+            boardPivot.quaternion.premultiply(tmpQuat).normalize();
+            cumulativeDegrees += THREE.MathUtils.radToDeg(dt * 0.85);
+          }
+        }
+
+        if (targetPos) {
+          boardPivot.position.lerp(targetPos, Math.min(1, dt * 10.0));
+          if (boardPivot.position.distanceTo(targetPos) < 0.001) {
+            boardPivot.position.copy(targetPos);
+            targetPos = null;
+          }
+        }
+
+        if (targetDist !== null) {
+          camDistance += (targetDist - camDistance) * Math.min(1, dt * 10.0);
+          if (Math.abs(targetDist - camDistance) < 0.002) {
+            camDistance = targetDist;
+            targetDist = null;
+          }
+        }
+      }
+
+      camera.position.z = camDistance;
+      const zoomRatio = (DEFAULT_DIST / camDistance).toFixed(2);
+      telemetryChip.textContent = `SPIN ${Math.round(cumulativeDegrees)}° · POS (${boardPivot.position.x.toFixed(2)}, ${boardPivot.position.y.toFixed(2)})m · ZOOM ${zoomRatio}×`;
+
+      renderer.render(scene, camera);
+    }
+
+    loadActiveModel();
+    requestAnimationFrame(animate);
   </script>
 </body>
 </html>
