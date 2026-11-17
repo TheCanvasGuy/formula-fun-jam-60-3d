@@ -11,7 +11,7 @@ import os
 import re
 import mimetypes
 
-PORT = 8099
+PORT = int(os.environ.get("PORT", "8100"))
 HOST = "127.0.0.1"
 SERVE_DIR = "/Volumes/T9/Workspace/projects/Formula Fun/3D Product Files/Jam_60_CAD"
 
